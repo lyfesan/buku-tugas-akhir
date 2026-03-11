@@ -1,0 +1,56 @@
+name: CI
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  build-document:
+    name: Build Document
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out
+        uses: actions/checkout@v6.0.1
+
+      - name: Compile Document with TeX Live
+        uses: xu-cheng/texlive-action@v3
+        with:
+          texlive_version: 2025 # Ubah versi TeX Live sesuai kebutuhan
+          scheme: full
+          run: |
+            # Install Microsoft TrueType core fonts package
+            apk add --no-cache msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+            # Compile using xelatex with bibliography
+            latexmk -xelatex -file-line-error -halt-on-error -interaction=nonstopmode main.tex
+
+      - name: Rename document
+        run: mkdir dist && mv main.pdf dist/template-buku-ta-its.pdf
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v4.0.0
+        with:
+          path: dist
+
+  deploy-pages:
+    name: Deploy Pages
+    needs: build-document
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5.0.0
+        
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
