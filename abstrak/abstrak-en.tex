@@ -16,7 +16,7 @@
 	Name / NRP  & : & \name{} / \nrp{} \\
 	Department  & : & \engdepartment{}   \\
 	Advisors 	& : & \advisor{}   \\
-    Co-advisor 	& : & \coadvisor{} \\
+%    Co-advisor 	& : & \coadvisor{} \\
 \end{tabularx}
 \vspace{4ex}
 \endgroup
@@ -25,8 +25,8 @@
 \textbf{Abstract}
 
 % Ubah paragraf berikut dengan abstrak dari tugas akhir dalam Bahasa Inggris
-In this research, we proposed \lipsum[1]
+Traditional questionnaire-based personality assessments are often prone to subjectivity and response falsification. Although artificial intelligence technology has enabled automated personality predictions based on visual data, the output is generally still in the form of continuous numerical scores that are difficult for lay users to interpret qualitatively. This study proposes a hybrid personality assessment system for short video clips by combining a Transformer regression model to predict Big Five Personality scores and a Large Language Model (LLM) to generate descriptive interpretations of personality profiles. The research methodology involves extracting image frames from the ChaLearn First Impression dataset, which are then processed using various variants of the Transformer model (ViT, SwinV2, PVTv2) with a custom regression head consisting of a linear layer, the GELU activation function, dropout, and a sigmoid function. The regression prediction results were then integrated into the LLM via multimodal prompt engineering techniques, applying both standard prompting and roleplay prompting scenarios. The experimental results show that the ViT-B/16 AugReg (IN21k) architecture, with the implementation of arch tuning and data augmentation, is the best regression prediction model, achieving an accuracy of 0.911 and a coefficient of determination ($R^2$) of 0.416. In the text interpretation stage, which was evaluated using the G-Eval metric, this study implemented two alternative model approaches. The Qwen3-VL-32B-Instruct model was identified as the primary LLM, achieving the highest overall score (0.9136) with a strong psychologist persona narrative, while the Gemma-4-31B-IT model was identified as the alternative, excelling in psychological accuracy (0.9566) and output format consistency.
 
 \noindent
 % Ubah kata-kata berikut dengan kata kunci dari tugas akhir dalam Bahasa Inggris
-\textbf{Keywords: Rocket, Anti-gravity, Energy, Space.}
+\textbf{Keywords: Big Five Personality, ChaLearn, Large Language Model, Personality Assessment, Transformer.}

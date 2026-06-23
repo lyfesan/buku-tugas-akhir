@@ -1,0 +1,56 @@
+\ProvidesFile{indonesian-apa.lbx}[2026/05/21 Custom Indonesian APA localization]
+
+% Mewarisi aturan format dari APA Amerika
+\InheritBibliographyExtras{american-apa}
+
+% Menimpa istilah bahasa Inggris dengan terjemahan bahasa Indonesia
+\DeclareBibliographyStrings{%
+  inherit          = {american-apa},
+  and              = {{dan}{dan}},
+  andothers        = {{dkk\adddot}{dkk\adddot}}, 
+  in               = {{di dalam}{di dalam}},
+  byauthor         = {{oleh}{oleh}},
+  editor           = {{penyunting}{penyunting}},
+  editors          = {{tim penyunting}{tim penyunting}},
+  translator       = {{penerjemah}{pent\adddot}},
+  translators      = {{tim penerjemah}{tim pent\adddot}},
+  compiler         = {{penyusun}{penyusun}},
+  compilers        = {{tim penyusun}{tim penyusun}},
+  page             = {{halaman}{hlm\adddot}},
+  pages            = {{halaman}{hlm\adddot}},
+  volume           = {{volume}{vol\adddot}},
+  volumes          = {{volume}{vol\adddot}},
+  number           = {{nomor}{no\adddot}},
+  issue            = {{edisi}{ed\adddot}},
+  chapter          = {{bab}{bab}},
+  edition          = {{edisi}{ed\adddot}},
+  version          = {{versi}{versi}},
+  nodate           = {{tanpa tahun}{t\adddot t\adddot}}, % Format baku untuk 'n.d.'
+  inpress          = {{dalam cetakan}{dalam cetakan}},
+  submitted        = {{diajukan}{diajukan}},
+  forthcoming      = {{akan terbit}{akan terbit}},
+  retrieved        = {{diakses}{diakses}},
+  from             = {{dari}{dari}},
+  url              = {{tautan}{tautan}},
+  urlseen          = {{diakses pada}{diakses pd\adddot}},
+  techreport       = {{laporan teknis}{lap\adddotspace teknis}},
+  resreport        = {{laporan penelitian}{lap\adddotspace lit\adddot}}, 
+  bathesis         = {{skripsi}{skripsi}}, 
+  mathesis         = {{tesis}{tesis}}, 
+  phdthesis        = {{disertasi}{disertasi}}, 
+  software         = {{perangkat lunak}{perangkat lunak}},
+  january          = {{Januari}{Januari}},
+  february         = {{Februari}{Februari}},
+  march            = {{Maret}{Maret}},
+  april            = {{April}{April}},
+  may              = {{Mei}{Mei}},
+  june             = {{Juni}{Juni}},
+  july             = {{Juli}{Juli}},
+  august           = {{Agustus}{Agustus}},
+  september        = {{September}{September}},
+  october          = {{Oktober}{Oktober}},
+  november         = {{November}{November}},
+  december         = {{Desember}{Desember}},
+}
+
+\endinput

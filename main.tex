@@ -1,15 +1,15 @@
 % Judul dokumen
 \title{Buku Tugas Akhir ITS}
-\author{Elon Reeve Musk}
+\author{Alief Gilang Permana Putra}
 
 % Pengaturan ukuran teks dan bentuk halaman dua sisi
-\documentclass[12pt,twoside]{report}
+\documentclass[12pt]{book}
 
 % Pengaturan ukuran halaman dan margin
 \usepackage[a4paper,top=30mm,left=30mm,right=20mm,bottom=25mm]{geometry}
 
 % Set encoding untuk Latex 2025
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 
 % Pengaturan ukuran spasi
 \usepackage[singlespacing]{setspace}
@@ -19,26 +19,49 @@
 % pdflatex tidak mendukung fontspec
 \usepackage{fontspec}
 
+% Gunakan bahasa Indonesia
+\usepackage[indonesian]{babel}
+
+\usepackage{csquotes}
+
 % Pengaturan detail pada file PDF
 \usepackage[pdfauthor={\@author},bookmarksnumbered,pdfborder={0 0 0}]{hyperref}
 
 % Pengaturan jenis karakter
-\usepackage[utf8]{inputenc}
+%\usepackage[utf8]{inputenc}
+
+% Pengaturan caption untuk tabel
+\usepackage{caption}
 
 % Pengaturan pewarnaan
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{multirow}
 \usepackage{tikz} % Diperlukan oleh nicematrix
+\usetikzlibrary{shapes, positioning, shadows, calc}
+\usepackage{amsfonts}
 \usepackage{nicematrix} % Paket untuk tabel sempurna
+
+% Pengaturan ukuran indentasi
+\setlength{\parindent}{2em}
+
+% --- SOLUSI MASALAH SPASI ---
+% 1. Mencegah LaTeX meregangkan spasi antar paragraf untuk meratakan bawah halaman
+\raggedbottom
+
+% 2. Memastikan paksa tidak ada jarak antar paragraf (jaga-jaga)
+\setlength{\parskip}{0pt}
+% ----------------------------
 
 % Pengaturan kutipan artikel
 \usepackage[style=apa, backend=biber]{biblatex}
+% Mapping package indonesian apa into american
+%\DeclareLanguageMapping{indonesian}{american-apa}
 
 % Package lainnya
 \usepackage{changepage}
 \usepackage{enumitem}
 \usepackage{eso-pic}
-\usepackage{txfonts} % Font times
+%\usepackage{txfonts} % Font times
 \usepackage{etoolbox}
 \usepackage{graphicx}
 \usepackage{lipsum}
@@ -53,6 +76,7 @@
 
 \usepackage{microtype} % Membuat tulisan lebih padat dan rapi
 \setlength{\emergencystretch}{3em} % Mencegah overfull hbox (teks keluar batas)
+\usepackage{amsmath}
 \usepackage{notoccite}
 \usepackage[titles]{tocloft}
 \setlength{\cftsecindent}{2em}
@@ -70,9 +94,25 @@
 \renewcommand{\cftlottitlefont}{\hfill\Large\bfseries}
 \renewcommand{\cftafterlottitle}{\hfill}
 
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+% Menampilkan "BAB " di Daftar Isi
+\renewcommand{\cftchappresnum}{BAB }
+
+% Menyesuaikan lebar kotak nomor agar teks tidak menabrak "BAB"
+\setlength{\cftchapnumwidth}{4em} % Sesuaikan angka ini jika jaraknya kurang/terlalu lebar
+
 % Menampilkan "Gambar" di Daftar Gambar
 \renewcommand{\cftfigpresnum}{\figurename\ }
 \setlength{\cftfignumwidth}{5.5em} % Adjust spacing between label and text
+
+% Mengatur jarak antara gambar (float) di atas/bawah halaman dengan teks
+%\setlength{\textfloatsep}{10pt plus 2.0pt minus 2.0pt}
+%
+%% Mengatur jarak antara gambar (float) di tengah-tengah teks (in-text) dengan teks di atas dan bawahnya
+%\setlength{\intextsep}{10pt plus 2.0pt minus 2.0pt}
+
+% Mengurangi jarak spesifik HANYA di bawah judul gambar (caption)
+\setlength{\belowcaptionskip}{-10pt}
 
 % Menampilkan "Tabel" di Daftar Tabel
 \renewcommand{\cfttabpresnum}{\tablename\ }
@@ -125,6 +165,69 @@
   \or November% 11
   \or December% 12
   \fi}
+  
+\usepackage{makecell}
+
+% PENGATURAN KODE SEMU (ALGORITHMIC)
+\usepackage[chapter]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
+% 1. Terjemahan ke Bahasa Indonesia
+\makeatletter
+\renewcommand{\listalgorithmname}{DAFTAR KODE SEMU}
+\floatname{algorithm}{Kode Semu}
+\makeatother
+
+% 2. Integrasi dengan autoref
+\providecommand{\algorithmautorefname}{Kode Semu}
+\renewcommand{\algorithmautorefname}{Kode Semu}
+
+% 3. Command baru untuk Input/Output
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\algorithmicoutput{\textbf{Output:}}
+\algnewcommand\Input{\item[\algorithmicinput]}
+\algnewcommand\Output{\item[\algorithmicoutput]}
+
+% 4. Formatting Kode Semu Custom (Garis tetap ada, Caption di bawah)
+\makeatletter
+\newcommand\fs@bruled{
+	\def\@fs@cfont{\bfseries}
+	\let\@fs@capt\floatc@plain
+	\def\@fs@pre{\hrule height.8pt depth0pt \kern5pt}        
+	\def\@fs@post{}                                          
+	\def\@fs@mid{\kern2pt\hrule height.8pt depth0pt \kern2ex} 
+	\let\@fs@iftopcapt\iffalse                                
+}
+\makeatother
+
+% Terapkan style custom tersebut
+\floatstyle{bruled}
+\restylefloat{algorithm}
+
+% 5. Menambahkan teks "Kode Semu" di Daftar Kode Semu (Metode Intercept)
+\makeatletter
+\let\oldlistofalgorithms\listofalgorithms
+\renewcommand{\listofalgorithms}{%
+	\begingroup
+	% 1. Tambahkan teks "Kode Semu" pada nomor
+	\let\oldnumberline\numberline
+	\renewcommand{\numberline}[1]{\oldnumberline{Kode Semu ##1 }}%
+	
+	% 2. Cegat fungsi inti LaTeX yang bertugas membaca file daftar (loa)
+	\let\oldstarttoc\@starttoc
+	\def\@starttoc##1{%
+		% 3. Paket float baru saja me-reset lebarnya menjadi sempit (2.3em).
+		% SEKARANG kita timpa paksa lebarnya menjadi 8.5em sebelum dirender!
+		\def\l@algorithm{\@dottedtocline{1}{1.5em}{6.5em}}%
+		\oldstarttoc{##1}%
+	}%
+	
+	% 4. Jalankan pencetakan daftar
+	\oldlistofalgorithms
+	\endgroup
+}
+\makeatother
 
 % Pengaturan format judul bab
 \usepackage{titlesec}
@@ -145,6 +248,20 @@
 %{\thesubsubsection.}
 %{1ex}
 %{}
+
+\setcounter{secnumdepth}{3} % Untuk memberi penomoran pada \subsubsection
+
+% 1. Mengubah format penomoran menjadi Huruf Kapital (A, B, C)
+% \Alph = Huruf Besar (A, B, C), \alph = huruf kecil (a, b, c)
+% Kita tidak menyertakan \thesubsection agar nomor induknya hilang.
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+
+% 2. Mengatur format judul agar ada titik setelah huruf (Misal: "A. Latar Belakang")
+\titleformat{\subsubsection}
+{\normalsize\bfseries} % Format text (Bold, Normal size)
+{\thesubsubsection.}   % Label nomor (ditambah titik di belakang)
+{1ex}                  % Jarak antara nomor dan judul
+{}
 
 \input{pustaka/variables.tex}
 
@@ -200,7 +317,19 @@
 	% Label tabel dan gambar dalam bahasa indonesia
 	\renewcommand{\figurename}{Gambar}
 	\renewcommand{\tablename}{Tabel}
-	\renewcommand{\lstlistingname}{Kode}
+	\renewcommand{\lstlistingname}{Kode Semu}
+	
+	% --- Pengaturan Penamaan autoref ---
+	\renewcommand{\tableautorefname}{Tabel}
+	\renewcommand{\figureautorefname}{Gambar}
+	\renewcommand{\equationautorefname}{Persamaan}
+	\renewcommand{\chapterautorefname}{Bab}
+	\renewcommand{\sectionautorefname}{Subbab}
+	\renewcommand{\subsectionautorefname}{Subbab}
+	\renewcommand{\subsubsectionautorefname}{Subbab}
+	\renewcommand{\appendixautorefname}{Lampiran}
+	\providecommand{\lstlistingautorefname}{Kode Semu}
+	\renewcommand{\lstlistingautorefname}{Kode Semu}
 
 	% Pengaturan ukuran indentasi paragraf
 	\setlength{\parindent}{2em}
@@ -209,7 +338,7 @@
 	\raggedbottom
 
 	% Pengaturan ukuran spasi paragraf
-	\setlength{\parskip}{1ex}
+	\setlength{\parskip}{0pt}
 
 	% Nomor halaman pembuka dimulai dari sini
 	\pagenumbering{roman}
@@ -251,22 +380,36 @@
 	\cleardoublepage
 
 	% Daftar isi
+	\phantomsection
 	\renewcommand*\contentsname{DAFTAR ISI}
 	\addcontentsline{toc}{chapter}{\contentsname}
 	\tableofcontents
 	\cleardoublepage
 
 	% Daftar gambar
+	\phantomsection
 	\renewcommand*\listfigurename{DAFTAR GAMBAR}
 	\addcontentsline{toc}{chapter}{\listfigurename}
 	\listoffigures
 	\cleardoublepage
 
 	% Daftar tabel
+	\phantomsection
 	\renewcommand*\listtablename{DAFTAR TABEL}
 	\addcontentsline{toc}{chapter}{\listtablename}
 	\listoftables
 	\cleardoublepage
+	
+	 % Daftar kode semu
+	\phantomsection
+	\addcontentsline{toc}{chapter}{\listalgorithmname}
+	\listofalgorithms
+	\cleardoublepage
+%	\phantomsection
+%	\renewcommand*\lstlistlistingname{DAFTAR KODE SEMU}
+%	\lstlistoflistings
+%	\addcontentsline{toc}{chapter}{\lstlistlistingname}
+%	\cleardoublepage
 
 	% Nomor halaman isi dimulai dari sini
 	\pagenumbering{arabic}
@@ -279,16 +422,16 @@
 	\input{bab/2-tinjauan-pustaka.tex}
 	\cleardoublepage
 
-	% Bab 3 desain dan implementasi
-	\input{bab/3-desain-implementasi.tex}
+	% Bab 3 metodologi
+	\input{bab/3-metodologi.tex}
 	\cleardoublepage
 
-	% Bab 4 pengujian dan analisis
-	\input{bab/4-pengujian-analisis.tex}
+	% Bab 4 hasil dan pembahasan
+	\input{bab/4-hasil-pembahasan.tex}
 	\cleardoublepage
 
 	% Bab 5 penutup
-	\input{bab/5-penutup.tex}
+	\input{bab/5-kesimpulan-saran.tex}
 	\cleardoublepage
 
 	\chapter*{DAFTAR PUSTAKA}

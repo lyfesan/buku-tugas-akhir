@@ -1,83 +1,88 @@
 \chapter{PENDAHULUAN}
 \label{chap:pendahuluan}
 
-% Ubah bagian-bagian berikut dengan isi dari pendahuluan
-
-Penelitian ini dilatarbelakangi oleh \lipsum[1][1-5]
-
 \section{Latar Belakang}
 \label{sec:latarbelakang}
 
-Pesatnya perkembangan roket yang merupakan \lipsum[1]
+Kepribadian merupakan salah satu aspek krusial yang membentuk identitas dan perilaku manusia. Kepribadian dapat didefinisikan sebagai karakteristik dan perilaku abadi yang membentuk cara hidup suatu individu yang mencakup sifat, minat, dorongan, nilai-nilai, konsep diri, bakat, dan pola emosional. Kepribadian dapat dipengaruhi oleh berbagai faktor antara lain genetik, pendidikan usia dini, budaya, pengalaman, dan hubungan dengan individu lain. Berbagai penelitian mengenai struktur dan perkembangan kepribadian menyimpulkan bahwa perilaku suatu individu dipengaruhi oleh kepribadian \parencite{apa-personality}. Oleh sebab itu, identifikasi sifat-sifat kepribadian memiliki banyak manfaat terutama untuk memahami karakteristik sifat individu yang memengaruhi kehidupan sehari-hari, seperti preferensi, keinginan, dan pilihan hidup \parencite{Ilmini2024}.
 
-\lipsum[2]
+Salah satu cara untuk mengidentifikasi kepribadian seseorang adalah dengan melakukan tes kepribadian. Tes ini merupakan proses asesmen penting dalam psikologi yang bertujuan untuk mengukur karakteristik individu yang mencerminkan kecenderungan untuk bertindak, merasa, berpikir, dan berinteraksi \parencite{Krishnamurthy2022}. Saat ini, model kepribadian yang populer digunakan untuk mengukur kepribadian seseorang adalah \textit{Big Five Personality} atau biasanya disingkat OCEAN (\textit{openness, conscientiousness, extraversion, agreeableness, neurocitism}) \parencite{Suman2022,Ilmini2024}. Penelitian sebelumnya menunjukkan model OCEAN telah digunakan pada tes kepribadian berbasis kuisioner IPIP-NEO-120 dan \textit{Brown and Tayler's short 15-item personality test} \parencite{Hilliard2022,Bose2023}.
 
-\section{Permasalahan}
-\label{sec:permasalahan}
+Meskipun tes kepribadian berbasis kuisioner memiliki dasar yang kuat dan validitas yang tinggi pada penelitian psikometri, metode ini memiliki kelemahan dalam praktiknya terutama pada konteks dengan risiko tinggi seperti rekrutmen atau seleksi karyawan \parencite{Hilliard2022}. Salah satu kelemahan utama adalah ketergantungan pada kejujuran dan kemampuan individu untuk memberikan penilaian sendiri (\textit{self-assesment}) secara akurat \parencite{Tavakol2021}. Responden cenderung melakukan taktik manajemen impresi atau bahkan melakukan pemalsuan respons (\textit{faking}) untuk menampilkan kepribadian ideal dan mengesankan yang mengakibatkan inflasi skor kepribadian  \parencite{Krishnamurthy2022,Hilliard2022}. Hal tersebut menyebabkan hasil tes kepribadian cenderung bias dan sangat bervariasi \parencite{Ponce-Lpez2016}. Tantangan dan keterbatasan dalam objektivitas penilaian kepribadian sejati (\textit{real personality traits}) membuat fokus penelitian mengenai kepribadian bergeser menuju identifikasi kepribadian yang tampak (\textit{apparent personality}). Berbeda dengan kepribadian sejati, penilaian kepribadian yang tampak didasarkan pada persepsi orang lain terhadap perilaku dan penampilan fisik suatu individu \parencite{Ilmini2024}.
 
-Dari permasalahan tersebut maka \lipsum[1][1-6]
+Seiring dengan kemajuan teknologi \textit{Artificial Intelligence} (AI) mendorong perkembangan asesmen kepribadian otomatis/\textit{automatic personality assesment} menggunakan metode \textit{deep learning} yang dapat menganalisis berbagai modalitas data seperti teks, audio, gambar, dan video. Selain itu, perkembangan teknik ekstraksi data ciri-ciri kepribadian personal melalui media teknologi informasi seperti media sosial, ponsel genggam, video kamera, dan jam pintar memungkinkan untuk memprediksi kepribadian seseorang secara objektif berdasarkan informasi yang didapatkan dari mesin (\textit{machine-sensed information}) seperti tulisan, jejak digital, penggunaan ponsel, perilaku non-verbal, pola bicara, dan lain sebagainya tanpa memerlukan keterlibatan aktif dari individu sehingga dapat menghasilkan performa prediksi yang tinggi serta mengurangi risiko bias subjektif \parencite{Phan2021,Shui2023}. Meskipun penelitian mengenai asesmen kepribadian otomatis mulai populer dan telah menghasilkan akurasi prediksi yang tinggi, fokus penelitian masih terpusat pada prediksi nilai numerik model kepribadian seperti \textit{Big Five} berupa nilai kontinu dalam rentang 0 hingga 1 \parencite{Suman2022}. Hasil prediksi berupa skor regresi yang abstrak kurang memberikan pemahaman kualitatif atau kontekstual bagi pengguna awam \parencite{Ilmini2024}. Oleh karena itu, diperlukan sebuah sistem asesmen kepribadian yang tidak hanya memprediksi skor kepribadian, tetapi juga dapat memberikan interpretasi deskriptif berdasarkan prediksi nilai kepribadian sehingga dapat dipahami oleh semua orang.
 
-\section{Tujuan}
-\label{sec:Tujuan}
+Perkembangan \textit{Large Language Model} (LLM) serta arsitektur Transformer pada teknologi \textit{deep learning} yang menjadi fundamental bagi LLM membuka peluang lebih luas untuk pengembangan metode baru dalam asesmen psikologis, terutama dalam ranah \textit{automatic personality prediction} dengan memfasilitasi, meningkatkan, dan mengintegrasikan asesmen psikologi berbasis multimetode yang sebelumnya jarang digunakan karena sangat sulit dan memakan banyak waktu \parencite{Brickman2025}. Keunggulan LLM dalam pemahaman kontekstual dan melakukan tugas pengolahan bahasa alami/\textit{natural language processing} (NLP) membuat LLM menjadi solusi dalam mengatasi masalah utama yang diidentifikasi pada penelitian \textit{automatic personality prediction} sebelumnya, yaitu kurangnya interpretasi kualitatif dari hasil prediksi model yang hanya berupa nilai numerik kontinu \parencite{Feizi-Derakhshi2022}. Keterbatasan ini menyebabkan hasil prediksi kepribadian menjadi kotak hitam (\textit{black box}) yang tidak transparan dan sulit diinterpretasi oleh pengguna akhir/\textit{end user} \parencite{Brickman2025,Naz2025}. Oleh karena itu, diusulkan penelitian menggunakan pendekatan hibrida untuk melakukan dua jenis tugas utama, yaitu prediksi kepribadian \textit{Big Five} menggunakan model \textit{deep-learning} berbasis Transformer dan melakukan interpretasi deskriptif kepribadian seseorang berdasarkan video singkat dan nilai prediksi \textit{Big Five} yang dihasilkan dengan memanfaatkan LLM. Integrasi ini bertujuan untuk menghasilkan laporan asesmen kepribadian yang lebih transparan, komprehensif, dan mudah dipahami oleh semua orang sehingga diharapkan dapat menunjukkan kemampuan penerapan praktis model prediksi kepribadian otomatis di dunia nyata.
 
-Tujuan dari \lipsum[1][1-3] adalah:
+\section{Rumusan Masalah}
+\label{sec:rumusanmasalah}
 
-\begin{enumerate}[nolistsep]
+Berdasarkan hal yang telah dipaparkan di latar belakang, diperlukan sistem asesmen kepribadian otomatis yang dapat memberikan interpretasi deskriptif. Rumusan masalah dalam tugas akhir ini adalah:
 
-  \item Membuat \lipsum[2][1-3]
+\begin{enumerate}[nosep]
+	\item Bagaimana cara mengimplementasikan model regresi berbasis arsitektur Transformer untuk memprediksi skor kepribadian \textit{Big Five} secara akurat berdasarkan input dari potongan video singkat?
 
-  \item \lipsum[3][1-3]
+	\item Bagaimana cara mengintegrasikan hasil prediksi model regresi ke dalam LLM melalui perancangan \textit{prompt} yang mengolah hasil prediksi nilai numerik dan data visual dari potongan video singkat untuk menghasilkan interpretasi kepribadian deskriptif?
 
+	\item Bagaimana kinerja sistem asesmen kepribadian hibrida yang dibangun ditinjau dari tingkat akurasi prediksi model dan kualitas narasi interpretasi yang dihasilkan?
 \end{enumerate}
+
 
 \section{Batasan Masalah}
 \label{sec:batasanmasalah}
 
-Batasan-batasan dari \lipsum[1][1-3] adalah:
+Terdapat beberapa batasan yang ditentukan untuk membatasi ruang lingkup penelitian sehingga studi yang dilakukan menjadi lebih terarah dan sesuai dengan tujuan yang ditentukan. Batasan masalah yang ditentukan adalah sebagai berikut:
 
-\begin{enumerate}[nolistsep]
+\begin{enumerate}[nosep]
+	\item Penelitian ini menggunakan dataset ChaLearn \textit{First Impression} \parencite{Ponce-Lpez2016} yang terdiri dari 10000 klip video dengan durasi rata-rata 15 detik. Proses pengolahan data dilakukan dengan mengekstraksi sejumlah \textit{frame} (sampel gambar) dari video untuk dianalisis sebagai data visual statis.
 
-  \item Mempermudah \lipsum[2][1-3]
+	\item Penelitian ini hanya menggunakan modalitas visual (\textit{image frame}). Data modalitas lain seperti suara dan transkripsi teks yang terdapat pada dataset asli tidak digunakan dalam proses prediksi model.
 
-  \item \lipsum[3][1-5]
+	\item Pengembangan model prediksi dibatasi pada penggunaan arsitektur berbasis Transformer atau \textit{hybrid Transformer} untuk tugas regresi nilai kepribadian \textit{Big Five}.
 
-  \item \lipsum[4][1-5]
+	\item Sistem interpretasi memanfaatkan LLM multimodal yang sudah dilatih sebelumnya (\textit{pre-trained}) melalui \textit{Application Programming Interface} (API) atau pustaka sumber terbuka (\textit{open source library}). Penelitian ini berfokus pada perancangan \textit{prompt} (\textit{prompt engineering}) dan tidak melakukan pelatihan ulang/\textit{fine-tuning} pada struktur internal LLM tersebut.
 
+	\item Hasil akhir sistem berupa skor prediksi kepribadian \textit{Big Five} dan narasi interpretasi deskriptif yang berfungsi sebagai alat bantu asesmen awal (\textit{screening}), bukan merupakan diagnosis psikologis klinis yang menggantikan peran psikolog profesional.
 \end{enumerate}
 
-\section{Sistematika Penulisan}
-\label{sec:sistematikapenulisan}
 
-Laporan penelitian tugas akhir ini terbagi menjadi \lipsum[1][1-3] yaitu:
+\section{Tujuan}
+\label{sec:Tujuan}
 
-\begin{enumerate}[nolistsep]
+Penelitian ini bertujuan untuk mengembangkan asesmen kepribadian otomatis berdasarkan perilaku yang dapat diamati pada potongan video pendek. Adapun tujuan spesifik dari penelitian ini adalah sebagai berikut:
 
-  \item \textbf{BAB I Pendahuluan}
+\begin{enumerate}[nosep]
+	\item Mengimplementasikan model regresi berbasis arsitektur Transformer untuk memprediksi skor kepribadian Big Five secara akurat berdasarkan input dari potongan video singkat.
 
-        Bab ini berisi \lipsum[2][1-5]
+	\item Mengintegrasikan hasil prediksi model regresi ke dalam LLM melalui perancangan prompt yang mengolah hasil prediksi nilai numerik dan data visual dari potongan video singkat untuk menghasilkan interpretasi kepribadian deskriptif.
 
-        \vspace{2ex}
+	\item Menilai kinerja sistem asesmen kepribadian hibrida yang dibangun ditinjau dari tingkat akurasi prediksi model dan kualitas narasi interpretasi yang dihasilkan.
+\end{enumerate}
 
-  \item \textbf{BAB II Tinjauan Pustaka}
+\section{Manfaat}
+\label{sec:manfaat}
 
-        Bab ini berisi \lipsum[3][1-5]
+Penelitian tugas akhir ini diharapkan dapat memberikan berbagai manfaat, baik secara teoritis maupun praktis. Manfaat dari penelitian ini adalah sebagai berikut:
 
-        \vspace{2ex}
+\subsection{Manfaat Teoritis}
+\begin{enumerate}[nosep]
+	\item Penelitian ini memberikan kontribusi teoretis pada bidang \textit{Explainable AI} (XAI) dalam psikologi dengan menawarkan solusi pendekatan hibrida untuk mengatasi keterbatasan dalam menjelaskan alasan di balik hasil prediksi kepribadian yang dihasilkan oleh model \textit{deep learning}.
 
-  \item \textbf{BAB III Desain dan Implementasi Sistem}
+	\item Studi ini memperkaya literatur mengenai efektivitas strategi integrasi antara model regresi visual dan LLM melalui teknik prompt engineering multimodal untuk memahami perilaku manusia dari data video yang terbatas.
+\end{enumerate}
 
-        Bab ini berisi \lipsum[4][1-5]
+\subsection{Manfaat Praktis}
+\begin{enumerate}[nosep]
+	\item Sistem yang dikembangkan dapat memberikan manfaat bagi perekrut sebagai alat bantu seleksi awal yang efisien karena mampu menyajikan profil kepribadian kandidat secara lebih cepat dan deskriptif dibandingkan metode manual.
 
-        \vspace{2ex}
+	\item Sistem ini dapat diterapkan dalam bidang pendidikan dan bimbingan karir untuk membantu konselor akademik dalam mengarahkan siswa atau pencari kerja memilih jalur studi dan profesi yang paling sesuai dengan potensi kepribadian mereka.
 
-  \item \textbf{BAB IV Pengujian dan Analisa}
+	\item Hasil penelitian ini dapat menjadi landasan teknis bagi pengembang perangkat lunak dalam menciptakan aplikasi pelatihan wawancara atau pengembangan diri yang mampu memberikan umpan balik otomatis dan personal kepada pengguna.
+\end{enumerate}
 
-        Bab ini berisi \lipsum[5][1-5]
+\subsection{Manfaat Sosial}
+\begin{enumerate}[nosep]
+	\item Penelitian ini berpotensi membuka akses yang lebih luas bagi masyarakat umum untuk melakukan asesmen mandiri dan memahami karakteristik kepribadian mereka secara objektif melalui teknologi dengan biaya yang terjangkau.
 
-        \vspace{2ex}
-
-  \item \textbf{BAB V Penutup}
-
-        Bab ini berisi \lipsum[6][1-5]
-
+	\item Penerapan teknologi ini dapat membantu mengurangi dampak bias subjektif manusia pada penilaian kesan pertama (\textit{first impression}) dengan menyediakan opini pembanding yang konsisten dan berbasis data.
 \end{enumerate}

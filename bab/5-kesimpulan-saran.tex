@@ -1,0 +1,35 @@
+\chapter{KESIMPULAN DAN SARAN}
+\label{chap:kesimpulan-saran}
+
+% Ubah bagian-bagian berikut dengan isi dari penutup
+
+\section{Kesimpulan}
+\label{sec:kesimpulan}
+
+Berdasarkan hasil eksperimen penelitian dan analisis yang dilakukan, berikut adalah kesimpulan yang didapatkan:
+
+\begin{enumerate}[nosep]
+
+  \item Implementasi model regresi berbasis arsitektur Transformer untuk memprediksi skor kepribadian Big Five dilakukan melalui modifikasi komponen \textit{custom regression head}. Komponen ini menggunakan kombinasi lapisan linear berdimensi 512 neuron, fungsi aktivasi \textit{non linear} GELU, dropout sebesar 30\%, dan fungsi sigmoid untuk memetakan ekstraksi fitur visual menjadi rentang probabilitas regresi yang valid. Berdasarkan evaluasi terhadap enam varian model, konfigurasi ViT-B/16 AugReg (IN21k) yang dioptimalkan dengan skenario \textit{arch tuning} beserta augmentasi menjadi model dengan kinerja terbaik. Model ini tidak hanya mampu mencapai tingkat presisi tertinggi dengan rata-rata akurasi puncak sebesar 0,911, tetapi juga mencapai nilai \textit{coefficient of determination} ($R^2$) sebesar 0,416 pada data uji independen. Pencapaian metrik $R^2$ ini menunjukkan bahwa penambahan kompleksitas arsitektur dan variabilitas data berhasil mencegah \textit{overfitting} sekaligus memungkinkan model menangkap keunikan representasi kepribadian individu.
+
+  \item Integrasi hasil prediksi regresi ke dalam LLM untuk menghasilkan interpretasi deskriptif dilakukan melalui sistem \textit{prompt engineering} multimodal. \textit{Prompt} dirancang menggunakan empat blok informasi utama: \textit{system instruction} untuk menentukan batasan persona, \textit{visual context} berupa citra dengan \textit{encoding} Base64, \textit{numerical context} (skor kepribadian Big Five), dan \textit{task instruction}. Pengujian memberikan hasil bahwa penerapan gaya \textit{roleplay prompting} sangat efektif dalam mentransformasi narasi LLM khususnya pada keluarga model Gemma 4 yang kaku dan analitis menjadi teks profil psikologis yang jauh lebih hangat, empatik, dan interaktif layaknya sebuah sesi konseling. Meskipun demikian, evaluasi \textit{LLM-as-a-judge} menunjukkan bahwa instruksi \textit{standard prompting} cenderung menghasilkan struktur laporan klinis yang lebih terstruktur poin per poin, yang membuat penilaian metrik evaluator G-Eval lebih tinggi dibandingkan \textit{roleplay prompting}.
+
+  \item Kinerja sistem asesmen kepribadian hibrida secara keseluruhan menunjukkan kemampuan analisis yang menyeluruh dari tahap awal hingga akhir terlepas dari adanya keterbatasan pada modalitas visual. Pada tahap prediksi visual menggunakan model prediksi Transformer, sistem menunjukkan kinerja tertinggi dalam mengenali sifat \textit{conscientiousness} dan \textit{extraversion} yang terlihat kuat pada fitur fisik, namun mengalami tantangan pada sifat \textit{agreeableness} yang bergantung pada interaksi sosial. Selanjutnya pada tahap interpretasi akhir (generasi teks), hasil G-Eval menunjukkan tidak adanya LLM yang mendominasi seluruh metrik penilaian. Oleh karena itu, sistem ini mengimplementasikan pendekatan dua model alternatif dengan menetapkan Qwen3-VL-32B-Instruct sebagai model utama karena meraih rata-rata keseluruhan tertinggi (0,9136) dengan narasi persona psikolog yang kaya dan Gemma-4-31B-IT sebagai alternatif dengan keunggulan model tersebut pada akurasi psikologis (0,9566) dan kepatuhan terhadap batasan token \textit{output}.
+
+\end{enumerate}
+
+\clearpage
+\section{Saran}
+\label{chap:saran}
+
+Berdasarkan penelitian yang dilakukan, terdapat kekurangan atau potensi yang dapat dieksplorasi lebih lanjut untuk pengembangan selanjutnya antara lain:
+
+\begin{enumerate}[nosep]
+
+  \item Penelitian selanjutnya disarankan untuk mengadopsi modalitas data lain secara penuh, seperti integrasi analisis gerak spasio-temporal dari video dan analisis fitur suara. Penambahan modalitas ini diharapkan mampu mengatasi keterbatasan penggunaan gambar statis, khususnya dalam memprediksi sifat kepribadian yang sangat berkaitan dengan cara manusia berinteraksi dan berempati seperti \textit{agreeableness}.
+
+  \item Diperlukan eksplorasi terkait \textit{parameter tuning} tingkat lanjut pada fase inferensi LLM seperti penyesuaian \textit{temperature}, \textit{top-p}, atau \textit{frequency penalty} untuk mengontrol panjang respons teks dengan lebih presisi. Hal ini diperlukan untuk mengatasi perilaku beberapa LLM yang terlalu elaboratif seperti Qwen3-VL sehingga rentan melanggar instruksi batasan kata dan menyebabkan hasil interpretasi terpotong secara paksa karena menyentuh batas maksimum token sistem.
+
+  \item Sistem evaluasi pada penelitian ini masih mengandalkan penilaian \textit{LLM-as-a-judge} (G-Eval). Pada pengembangan berikutnya disarankan untuk melibatkan validasi kualitatif secara langsung dari psikolog profesional. Keterlibatan pakar psikologi akan sangat berguna untuk memverifikasi hasil interpretasi serta memastikan bahasa yang dihasilkan oleh sistem benar-benar selaras dengan kode etik pemberian hasil tes kepribadian.
+
+\end{enumerate}

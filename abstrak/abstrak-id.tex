@@ -18,7 +18,7 @@
   Departemen 				& : & \department{}		\\
 
   Dosen Pembimbing       	& : & \advisor{}		\\
-  Dosen Ko-pembimbing       & : & \coadvisor{}		\\
+%  Dosen Ko-pembimbing       & : & \coadvisor{}		\\
 \end{tabularx}
 \vspace{4ex}
 \endgroup
@@ -27,8 +27,8 @@
 \textbf{Abstrak}
 
 % Ubah paragraf berikut dengan abstrak dari tugas akhir
-Pada penelitian ini kami mengajukan \lipsum[1]
+Penilaian kepribadian tradisional berbasis kuesioner sering kali rentan terhadap bias subjektivitas dan pemalsuan respons. Meskipun teknologi kecerdasan buatan telah memungkinkan prediksi kepribadian secara otomatis berdasarkan data visual, hasil keluaran yang diberikan umumnya masih berupa skor numerik kontinu yang sulit dipahami secara kualitatif oleh pengguna awam. Penelitian ini mengusulkan sistem asesmen kepribadian hibrida pada potongan video singkat dengan menggabungkan model regresi Transformer untuk memprediksi skor Big Five Personality dan Large Language Model (LLM) untuk menghasilkan interpretasi profil kepribadian yang deskriptif. Metodologi penelitian mencakup ekstraksi \textit{frame} gambar dari dataset ChaLearn \textit{First Impression}, yang kemudian diproses menggunakan berbagai varian model Transformer (ViT, SwinV2, PVTv2) dengan modifikasi \textit{custom regression head} yang terdiri dari lapisan linear, fungsi aktivasi GELU, \textit{dropout}, dan sigmoid. Hasil prediksi regresi selanjutnya diintegrasikan ke dalam LLM melalui teknik \textit{ prompt engineering multimodal} dengan menerapkan skenario \textit{standard prompting} dan \textit{roleplay prompting}. Hasil eksperimen menunjukkan bahwa arsitektur ViT-B/16 AugReg (IN21k) dengan penerapan skenario \textit{arch tuning} beserta augmentasi merupakan model prediksi regresi terbaik, dengan tingkat akurasi mencapai 0,911 dan nilai \textit{coefficient of determination} ($R^2$) sebesar 0,416. Pada tahap interpretasi teks yang dievaluasi menggunakan metrik G-Eval, penelitian ini mengimplementasikan pendekatan dua model alternatif. Model Qwen3-VL-32B-Instruct ditetapkan sebagai LLM utama yang meraih skor keseluruhan tertinggi (0,9136) dengan narasi persona psikolog yang kuat, sedangkan model Gemma-4-31B-IT ditetapkan sebagai alternatif dengan keunggulan pada akurasi psikologis (0,9566) dan kedisiplinan format \textit{output}.
 
 \noindent
 % Ubah kata-kata berikut dengan kata kunci dari tugas akhir
-\textbf{Kata Kunci: Roket, \emph{Anti-gravitasi}, Energi, Angkasa.}
+\textbf{Kata Kunci: Asesmen Kepribadian, Big Five Personality, ChaLearn, Large Language Model, Transformer.}
