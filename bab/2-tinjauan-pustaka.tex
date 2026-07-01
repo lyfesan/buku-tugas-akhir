@@ -1,6 +1,7 @@
+\raggedbottom
 \chapter{TINJAUAN PUSTAKA}
 
-Bab ini membahas mengenai literatur dan hasil penelitian sebelumnya yang berkaitan dengan topik tugas akhir yang dikerjakan serta menjelaskan teori-teori dasar yang digunakan dalam penyusunan tugas akhir ini.
+Bab ini menguraikan tinjauan pustaka yang mencakup literatur penelitian terdahulu serta landasan teori pokok yang relevan dengan topik pada tugas akhir ini. Pada bagian pertama, dipaparkan ulasan analitis mengenai berbagai studi terkait asesmen kepribadian otomatis sebagai acuan perbandingan untuk menonjolkan kebaruan pendekatan hibrida yang diusulkan. Bagian kedua membahas konsep-konsep fundamental yang mendukung perancangan sistem, mulai dari model psikologi \textit{Big Five personality}, arsitektur \textit{deep learning} berbasis Transformer, teknologi LLM, hingga metrik evaluasi yang digunakan.
 % Ubah konten-konten berikut sesuai dengan isi dari tinjauan pustaka
 \section{Hasil Penelitian Terdahulu}
 
@@ -92,6 +93,7 @@ Penelitian \textcite{Mandakini2023} berfokus pada pengembangan agen wawancara ce
 
 \section{Dasar Teori}
 
+Subbab ini memaparkan berbagai konsep fundamental dan teori keilmuan yang menjadi landasan utama dalam penyusunan tugas akhir ini. Pembahasan mencakup teori psikologi mengenai \textit{Big Five personality} serta tinjauan mendalam mengenai arsitektur \textit{deep learning} yang digunakan, meliputi Transformer dan LLM. Selain itu, subbab ini juga menjelaskan tentang teknik pemrosesan data wajah, detail mengenai dataset ChaLearn, hingga metrik evaluasi yang digunakan untuk mengukur kinerja sistem.
 
 \subsection{\textit{Big Five Personality}}
 
@@ -103,7 +105,7 @@ Kepribadian didefinisikan sebagai kumpulan perbedaan individu yang biasa disebut
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.85\linewidth]{gambar/chalearn-dataset.png}
+	\includegraphics[width=0.8\linewidth]{gambar/chalearn-dataset.png}
 	\caption{Cuplikan Video dengan Label pada Dataset ChaLearn}
 	\label{fig:chalearn-dataset}
 \end{figure}
@@ -154,7 +156,7 @@ Vision Transformer (ViT) merupakan arsitektur yang mengadaptasi model Transforme
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{gambar/ViT.png}
+	\includegraphics[width=\linewidth]{gambar/ViT.png}
 	\caption{Arsitektur Vision Transformer \parencite{Dosovitskiy2021}}
 	\label{fig:vit-arch}
 \end{figure}
@@ -212,7 +214,7 @@ Pyramid Vision Transformer (PVT) diperkenalkan sebagai model \textit{backbone} T
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{gambar/pvt.png}
+	\includegraphics[width=0.6\linewidth]{gambar/pvt.png}
 	\caption{Arsitektur Piramida pada PVT \parencite{Wang2021}}
 	\label{fig:pvt}
 \end{figure}
@@ -233,7 +235,7 @@ PVT v2 diperkenalkan sebagai pengembangan untuk mengatasi keterbatasan pada vers
 
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{gambar/pvt-v2-improv.png}
+		\includegraphics[width=0.57\linewidth]{gambar/pvt-v2-improv.png}
 		\caption{Mekanisme \textit{Overlapping Patch Embedding} dan \textit{Convolutional Feed-Forward Network}  \parencite{Wang2023}}
 		\label{fig:pvt-v2}
 	\end{figure}
@@ -270,7 +272,7 @@ Teknik lain yang digunakan adalah \textit{contextual injection}, yaitu proses me
 
 \subsection{Gemma}
 
-Gemma merupakan salah satu model \textit{open source} yang dikembangkan oleh Google DeepMind menggunakan penelitian dan teknologi yang sama dengan model Gemini. Model ini dirancang dalam berbagai ukuran untuk memfasilitasi keterbatasan sumber daya komputasi sehingga dapat dijalankan pada perangkat keras kelas konsumen seperti laptop yang hanya menggunakan CPU. Gemma dibangun di atas arsitektur Transformer \textit{decoder} yang mendukung panjang konteks dari 8192 token hingga 256000 token pada model terbaru. Arsitektur Gemma mengintegrasikan berbagai pendekatan modern untuk menjaga efisiensi dan stabilitas pelatihan seperti penggunaan \textit{Rotary Positional Embeddings} (RoPE), aktivasi GeGLU, serta normalisasi RMSNorm \parencite{GemmaTeam2024}. Model terbaru, yaitu Gemma 4 tersedia dalam 3 varian, yaitu \textit{Small} (2B dan 4B), \textit{Dense} (31B), dan \textit{Mixture-of-Experts} (26B A4B) yang memungkinkan fleksibilitas penggunaan sesuai dengan batasan daya komputasi perangkat yang digunakan \parencite{Gemma4Model}.
+Gemma merupakan salah satu model \textit{open source} yang dikembangkan oleh Google DeepMind menggunakan penelitian dan teknologi yang sama dengan model Gemini. Model ini dirancang dalam berbagai ukuran untuk memfasilitasi keterbatasan sumber daya komputasi sehingga dapat dijalankan pada perangkat keras kelas konsumen seperti laptop yang hanya menggunakan CPU. Gemma dibangun di atas arsitektur Transformer \textit{decoder} yang mendukung panjang konteks dari 8192 token hingga 256.000 token pada model terbaru. Arsitektur Gemma mengintegrasikan berbagai pendekatan modern untuk menjaga efisiensi dan stabilitas pelatihan seperti penggunaan \textit{Rotary Positional Embeddings} (RoPE), aktivasi GeGLU, serta normalisasi RMSNorm \parencite{GemmaTeam2024}. Model terbaru, yaitu Gemma 4 tersedia dalam 3 varian, yaitu \textit{Small} (2B dan 4B), \textit{Dense} (31B), dan \textit{Mixture-of-Experts} (26B A4B) yang memungkinkan fleksibilitas penggunaan sesuai dengan batasan daya komputasi perangkat yang digunakan \parencite{Gemma4Model}.
 
 Gemma menunjukkan kinerja yang unggul pada NLP, penalaran umum, serta tugas-tugas analitis yang kompleks. Model ini mencapai kinerja \textit{state-of-the-art} pada berbagai bidang seperti matematika, sains, dan pemrograman. Varian Gemma 3 memperkenalkan kemampuan multimodal yang memungkinkan model untuk memahami input visual secara langsung melalui integrasi SigLIP \textit{vision encoder}. Kemampuan visual tersebut didukung oleh metode \textit{Pan and Scan} (P\&S) yang membuat model mampu menangkap gambar pada resolusi dan rasio aspek aslinya tanpa kehilangan detail penting atau teks yang berukuran kecil. Selain itu, untuk mengoptimalkan penggunaan memori saat menangani konteks data yang sangat panjang, Gemma menerapkan mekanisme \textit{interleaving} dengan rasio 5:1 antara lapisan \textit{self-attention} lokal dan global. Seluruh varian model Gemma juga melalui proses \textit{instruction-tuning} dan \textit{Reinforcement Learning from Human Feedback} (RLHF) untuk memastikan tingkat keselarasan respon yang tinggi terhadap preferensi pengguna manusia \parencite{GemmaTeam2025}.
 
@@ -293,7 +295,7 @@ Pada bagian ini, akan dijelaskan metrik evaluasi yang digunakan untuk mengukur k
 
 Kualitas model pada tugas regresi untuk memprediksi skor kepribadian \textit{Big Five} tidak dievaluasi dengan akurasi klasifikasi, tetapi dengan seberapa dekat nilai prediksi terhadap skor kontinu \textit{ground truth}. Oleh karena itu, digunakan kombinasi metrik \textit{error} (MAE, RMSE), metrik varians (R²), dan \textit{Accuracy} (1–MAE) yang memetakan \textit{error} menjadi nilai kemiripan yang mudah ditafsirkan \parencite{Plevris2022, Chicco2021}.
 
-\begin{enumerate}[noitemsep, label=\alph*.]
+\begin{enumerate}[nosep, label=\alph*.]
 	\item \textit{Mean Absolute Error} (MAE) \\
 	MAE mengukur rata-rata \textit{error} absolut antara nilai sebenarnya dan nilai prediksi yang ditunjukkan pada Persamaan \ref{eq:mae}.
 	\begin{equation}
@@ -301,7 +303,6 @@ Kualitas model pada tugas regresi untuk memprediksi skor kepribadian \textit{Big
 		\label{eq:mae}
 	\end{equation}
 	dengan $y_i$ merupakan skor kepribadian aktual, $\hat{y}_i$ adalah skor prediksi, dan $N$ jumlah sampel. MAE tidak membedakan arah kesalahan (\textit{over/under‑estimate}) dan kurang sensitif terhadap \textit{outlier} dibanding metrik berbasis kuadrat sehingga sering digunakan sebagai indikator umum \textit{error} rata‑rata model regresi \parencite{Chicco2021}. MAE yang lebih kecil berarti prediksi skor rata-rata tiap \textit{Big Five trait} lebih dekat ke nilai sebenarnya.
-
 	\item \textit{Accuracy} \\
 	Kompetisi ChaLearn menggunakan metrik \textit{Accuracy} untuk mendapatkan nilai antara 0-1 yang interpretasinya mirip dengan metrik akurasi pada klasifikasi tetapi tetap berbasis \textit{error} kontinu. Rumus \textit{Accuracy} ditunjukkan pada Persamaan \ref{eq:accuracy}.
 	\begin{equation}
@@ -309,16 +310,13 @@ Kualitas model pada tugas regresi untuk memprediksi skor kepribadian \textit{Big
 		\label{eq:accuracy}
 	\end{equation}
 	di mana $\text{MAE}_\text{model}$ adalah MAE dari hasil prediksi model. Metrik ini digunakan sebagai metrik utama yang hasilnya dapat diintepretasikan dengan lebih mudah \parencite{Ponce-Lpez2016}.
-
 	\item \textit{Root Mean Square Error} (RMSE) \\
 	RMSE mengukur rata‑rata \textit{error} dengan memberi bobot lebih besar pada error yang besar seperti ditunjukkan pada Persamaan \ref{eq:rmse}.
 	\begin{equation}
 		\text{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}
 		\label{eq:rmse}
 	\end{equation}
-
 	RMSE selalu lebih besar dari MAE dan sangat berguna ketika \textit{error} besar dianggap lebih penting karena \textit{error} dikuadratkan sebelum dirata-rata \parencite{Chai2014}. Dalam prediksi kepribadian \textit{Big Five}, RMSE yang rendah menunjukkan bahwa model tidak hanya baik secara rata‑rata, tetapi juga jarang menghasilkan prediksi yang sangat jauh dari nilai aktual.
-
 	\item \textit{Coefficient of Determination} ($R^{2}$)  \\
 	\textit{Coefficient of determination} atau $R^{2}$ mengukur proporsi varians target yang dapat dijelaskan model dibandingkan \textit{baseline} yang hanya memprediksi rata‑rata, dihitung dengan Persamaan \ref{eq:rsquare}.
 	\begin{equation}
@@ -326,12 +324,13 @@ Kualitas model pada tugas regresi untuk memprediksi skor kepribadian \textit{Big
 		\label{eq:rsquare}
 	\end{equation}
 	dengan $\bar{y}$ adalah rata‑rata skor kepribadian aktual. Nilai $R^{2}$ bisa negatif yang berarti model lebih buruk dari \textit{baseline} rata‑rata hingga 1 yang berarti \textit{fit} sempurna. $R^{2}$ yang lebih tinggi berarti model menjelaskan porsi lebih besar variasi skor kepribadian antar individu. Dalam prediksi kepribadian \textit{Big Five}, $R^{2}$ sering dipakai berdampingan dengan RMSE. RMSE menyatakan besarnya \textit{error} dalam satuan skor, sedangkan $R^{2}$ menyatakan seberapa baik model menjelaskan struktur varians data \parencite{Chicco2021, Habib2024}.
-
 \end{enumerate}
 
 \subsubsection{G-Eval}
 
 G-Eval merupakan kerangka kerja evaluasi berbasis LLM yang dirancang untuk menilai kualitas teks hasil generasi menggunakan mekanisme \textit{Chain-of-Thought} (CoT) dan paradigma \textit{form-filling} \parencite{Liu2023}. Pada ekosistem pengembangan kecerdasan buatan, G-Eval menjadi representasi dari paradigma \textit{LLM-as-a-judge} yang memanfaatkan LLM seperti GPT-4 sebagai otoritas penilai untuk memberikan skor, peringkat, atau seleksi terhadap \textit{output} model lain \parencite{Li2025}. Keunggulan utama G-Eval dibandingkan metrik tradisional seperti BLEU atau ROUGE adalah kemampuannya untuk menangkap atribut semantik yang kompleks dan nuansa konteks yang sering kali lolos dari pengukuran berbasis \textit{lexical overlap} \parencite{Pereira2024}.
+
+Kerangka kerja G-Eval diimplementasikan secara sistematis melalui integrasi tiga komponen utama yang ditunjukkan pada Gambar \ref{fig:g-eval}. Proses ini diawali dengan penyusunan \textit{prompt} yang berisi pengenalan tugas serta definisi kriteria evaluasi spesifik untuk memberikan batasan parameter bagi LLM yang bertindak sebagai otoritas penilai \parencite{Liu2023}. Selanjutnya, model menjalankan mekanisme \textit{Auto Chain-of-Thought} (Auto-CoT) untuk menghasilkan rangkaian langkah evaluasi internal secara otomatis yang berfungsi memberikan panduan penalaran secara detail bagi model sebelum memberikan skor akhir \parencite{Chiang2023}. Berdasarkan panduan langkah tersebut, model kemudian memproses teks target melalui paradigma \textit{form-filling} untuk menghasilkan prediksi kualitas \textit{output}. G-Eval tidak hanya mengambil skor integer mentah, melainkan menggunakan fungsi penilaian berbobot yang memanfaatkan probabilitas dari token \textit{output} model untuk melakukan normalisasi sehingga menghasilkan skor kontinu yang mampu menangkap nuansa perbedaan kualitas dengan lebih halus \parencite{Liu2023}. Pada tahap akhir untuk menjamin reliabilitas hasil, kerangka kerja ini menerapkan strategi \textit{self-consistency }dengan melakukan pengambilan sampel berulang dan menghitung rata-rata skor untuk memitigasi bias distribusi dan memastikan keselarasan yang tinggi dengan penilaian manusia \parencite{Pereira2024}.
 
 \begin{figure}[H]
 	\centering
@@ -339,5 +338,3 @@ G-Eval merupakan kerangka kerja evaluasi berbasis LLM yang dirancang untuk menil
 	\caption{Kerangka Kerja G-Eval \parencite{deepeval_metrics}}
 	\label{fig:g-eval}
 \end{figure}
-
-Kerangka kerja G-Eval diimplementasikan secara sistematis melalui integrasi tiga komponen utama yang ditunjukkan pada Gambar \ref{fig:g-eval}. Proses ini diawali dengan penyusunan \textit{prompt} yang berisi pengenalan tugas serta definisi kriteria evaluasi spesifik untuk memberikan batasan parameter bagi LLM yang bertindak sebagai otoritas penilai \parencite{Liu2023}. Selanjutnya, model menjalankan mekanisme \textit{Auto Chain-of-Thought} (Auto-CoT) untuk menghasilkan rangkaian langkah evaluasi internal secara otomatis yang berfungsi memberikan panduan penalaran secara detail bagi model sebelum memberikan skor akhir \parencite{Chiang2023}. Berdasarkan panduan langkah tersebut, model kemudian memproses teks target melalui paradigma \textit{form-filling} untuk menghasilkan prediksi kualitas \textit{output}. G-Eval tidak hanya mengambil skor integer mentah, melainkan menggunakan fungsi penilaian berbobot yang memanfaatkan probabilitas dari token \textit{output} model untuk melakukan normalisasi sehingga menghasilkan skor kontinu yang mampu menangkap nuansa perbedaan kualitas dengan lebih halus \parencite{Liu2023}. Pada tahap akhir untuk menjamin reliabilitas hasil, kerangka kerja ini menerapkan strategi \textit{self-consistency }dengan melakukan pengambilan sampel berulang dan menghitung rata-rata skor untuk memitigasi bias distribusi dan memastikan keselarasan yang tinggi dengan penilaian manusia \parencite{Pereira2024}.

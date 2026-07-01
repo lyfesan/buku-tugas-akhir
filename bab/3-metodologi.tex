@@ -1,10 +1,11 @@
 \chapter{METODOLOGI}
 
 % Ubah konten-konten berikut sesuai dengan isi dari metodologi
+Bab ini menguraikan tahapan sistematis dan metode yang diterapkan dalam melaksanakan penelitian tugas akhir ini. Penjelasan mencakup rancangan kerangka sistem asesmen kepribadian yang menggunakan pendekatan hibrida, mulai dari tahap pemrosesan data visual hingga pengujian hasil akhir. Bab ini juga merinci metode pendekatan yang digunakan, bahan dan peralatan pendukung eksperimen, serta teknis urutan pelaksanaan penelitian secara keseluruhan.
 
 \section{Metode yang digunakan}
 
-Bagian ini membahas mengenai metode-metode yang digunakan dalam melakukan interpretasi kepribadian \textit{Big Five} dari gambar yang diekstraksi pada video. Berdasarkan \autoref{fig:flowchart-penelitian}, alur penelitian meliputi praproses dataset video menjadi gambar, prediksi dan evaluasi nilai kepribadian, perancangan \textit{prompt} interpretasi kepribadian, interpretasi kepribadian dengan LLM dan evaluasi hasil interpretasi.
+Bagian ini menguraikan rangkaian metode yang diterapkan untuk mengekstraksi dan menginterpretasi profil kepribadian \textit{Big Five} berdasarkan fitur visual dari potongan video. Berdasarkan \autoref{fig:flowchart-penelitian}, tahapan penelitian diawali dengan praproses dataset video menjadi kumpulan gambar statis yang dilanjutkan dengan proses prediksi serta evaluasi nilai numerik kepribadian. Alur tersebut kemudian memasuki tahap perancangan \textit{prompt}, interpretasi kepribadian menggunakan LLM, dan evaluasi akhir terhadap kualitas narasi yang dihasilkan.
 
 \begin{figure}[H]
 	\centering
@@ -16,32 +17,38 @@ Bagian ini membahas mengenai metode-metode yang digunakan dalam melakukan interp
 \subsection{Praproses Dataset Video menjadi Gambar}
 \label{subsec:praproses-dataset}
 
-Dataset ChaLearn yang digunakan merupakan dataset dengan modalitas video. Oleh karena itu, diperlukan konversi data menjadi gambar statis. Setiap \textit{frame} yang diekstraksi dari video diperlakukan sebagai satu sampel data tunggal yang independen.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\linewidth]{gambar/flowchart-praproses.png}
-	\caption{Diagram Alir Praproses Dataset}
-	\label{fig:flowchart-praproses}
-\end{figure}
-
-Seperti yang ditunjukkan pada Gambar \ref{fig:flowchart-praproses}, tahapan praproses meliputi ekstraksi \textit{frame}, deteksi wajah utama dan \textit{cropping}, pengubahan ukuran gambar, augmentasi, dan normalisasi.
+Dataset ChaLearn yang digunakan merupakan dataset dengan modalitas video. Oleh karena itu, diperlukan konversi data menjadi gambar statis. Setiap \textit{frame} yang diekstraksi dari video diperlakukan sebagai satu sampel data tunggal yang independen. Tahapan praproses dilakukan untuk mentransformasi data mentah ke dalam format visual yang terstandarisasi sebelum dipelajari oleh model prediksi. Rangkaian keseluruhan dari proses transformasi data ini ditunjukkan secara visual melalui diagram alir pada \autoref{fig:flowchart-praproses}. Untuk menghasilkan kualitas input yang optimal bagi model, terdapat serangkaian langkah praproses yang dieksekusi secara berurutan sebagai berikut:
 
 \begin{enumerate}[nosep]
 	\item Ekstraksi \textit{frame} dan pelabelan gambar dilakukan untuk mengubah data video menjadi gambar statis. Dilakukan pengambilan sampel \textit{frame} sebanyak 15 dengan interval tetap dari setiap video dalam dataset untuk mewakili setiap detik dalam video yang rata-rata berdurasi 15 detik. Setiap \textit{frame} yang diekstraksi diberi label yang sama dengan video induknya. Sebagai contoh, jika sebuah video memiliki nilai \textit{Openness} 0.8, maka seluruh gambar yang diekstraksi dari video tersebut akan dilabeli dengan nilai \textit{Openness} 0.8. Hal ini memungkinkan model untuk belajar mengasosiasikan fitur visual statis sesaat dengan label kepribadian secara keseluruhan.
 
 	\item Deteksi wajah utama dan \textit{cropping} dilakukan karena fokus penelitian adalah \textit{apparent personality} dari wajah manusia, maka tampilan latar belakang yang tidak relevan dihilangkan. MediaPipe \textit{Face Detection} digunakan untuk mendeteksi wajah, kemudian dilakukan \textit{cropping} pada gambar berdasarkan \textit{bounding box} wajah yang terdeteksi dengan penambahan sedikit margin untuk memastikan seluruh fitur wajah seperti rambut tetap terlihat.
 
-	\item Pengubahan ukuran dilakukan agar dimensi gambar sesuai dengan spesifikasi \textit{input} model prediksi, yaitu $224 \times 224$ untuk model ViT dan PvT, serta $256 \times 256$ untuk model Swin Transformer.
+	\item Pengubahan ukuran dilakukan agar dimensi gambar sesuai dengan spesifikasi \textit{input} model prediksi, yaitu $224 \times 224$ untuk model ViT dan PVT, serta $256 \times 256$ untuk model Swin Transformer.
 	
 	\item Augmentasi dilakukan untuk memperkaya variasi gambar pada dataset, mengingat terdapat beberapa \textit{frame} yangmemiliki kemiripan karena hasil ekstraksi 15 \textit{frame} pada satu video. Augmentasi yang dilakukan meliputi \textit{Random Horizontal Flip} dengan probabilitas 0.5, \textit{Random Rotation} sebesar 10 derajat, dan mengubah kecerahan dan kontras gambar secara acak dengan faktor maksimal sebesar 0.2.
 	
 	\item Normalisasi dilakukan nilai piksel menggunakan normalisasi Z-\textit{score} dengan rata-rata untuk setiap \textit{channel} warna pada gambar $R=0.485$, $G=0.456$, dan $B=0.406$ serta standar deviasi untuk setiap \textit{channel} secara berurutan $0,229$, $0,224$, dan $0,225$. Nilai ini didapatkan dari perhitungan dataset ImageNet yang digunakan untuk pelatihan awal model \textit{pretrained} Transformer yang selanjutnya dilatih menggunakan dataset ChaLearn untuk menyesuaikan kebutuhan prediksi kepribadian.
 \end{enumerate}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{gambar/flowchart-praproses.png}
+	\caption{Diagram Alir Praproses Dataset}
+	\label{fig:flowchart-praproses}
+\end{figure}
+
 \subsection{Arsitektur Model Regresi Transformer}
 \label{subsec:arsitektur-regresi-bigfive}
-Penelitian ini memanfaatkan arsitektur Transformer sebagai (\textit{backbone}) untuk ekstraksi fitur visual dari citra wajah. Tiga varian model digunakan untuk dibandingkan kinerjanya, yaitu ViT, Swin Transformer V2, dan PvT V2. Ketiga model ini merupakan model yang telah dilatih sebelumnya (\textit{pretrained}) pada dataset ImageNet untuk tugas klasifikasi gambar.
+Penelitian ini memanfaatkan arsitektur Transformer sebagai (\textit{backbone}) untuk ekstraksi fitur visual dari citra wajah. Tiga varian model digunakan untuk dibandingkan kinerjanya, yaitu ViT, Swin Transformer V2, dan PVT V2. Ketiga model ini merupakan model yang telah dilatih sebelumnya (\textit{pretrained}) pada dataset ImageNet untuk tugas klasifikasi gambar.
+
+Adaptasi utama yang dilakukan dalam penelitian ini adalah mengubah fungsi model dari klasifikasi menjadi regresi multi-target (multi-target regression). Umumnya model-model tersebut memiliki lapisan akhir (\textit{head}) berupa lapisan linier (\textit{fully connected layer}) dengan ribuan neuron \textit{output} sesuai dengan jumlah kelas klasifikasi yang diikuti oleh fungsi aktivasi \textit{softmax}. Struktur ini tidak relevan untuk prediksi nilai kepribadian yang bersifat kontinu. Arsitektur model dirancang menggunakan dua komponen utama, yaitu \textit{backbone} dan \textit{regression head}. Visualisasi arsitektur ini dapat dilihat pada Gambar \ref{fig:custom-transformer-arch}. Berikut adalah penjelasan bagian dari arsitektur.
+
+\begin{enumerate}[nosep]
+	\item \textit{Backbone} Transformer, bagian ini menggunakan \textit{pre-trained} Transformer ViT, Swin V2, dan PVT V2. \textit{Backbone} ini bertugas mengubah citra \textit{input} menjadi representasi vektor global dengan dimensi $D$, di mana $D$ bergantung pada varian model yang digunakan.
+	
+	\item \textit{Custom regression head}, bagian ini berfungsi untuk mengadaptasi model Transformer yang umumnya digunakan untuk klasifikasi. Berbeda dengan \textit{head} klasifikasi standar, \textit{head} ini dirancang khusus untuk tugas regresi \textit{multi-output}. Komponen ini terdiri dari lapisan linear \textit{fully connected} dengan matriks \textit{weight} $W \in \mathbb{R}^{D \times 512}$, yang memetakan vektor fitur $D$ ke 512 neuron \textit{output} untuk memadatkan vektor fitur \textit{backbone} Transformer. \textit{Output} ini kemudian melewati \textit{hidden layer} \textit{Gaussian Error Linear Units} (GELU) untuk memetakan fitur non linear pada \textit{regression head}. Dibandingkan dengan ReLU, GELU bersifat \textit{smooth} dan probabilistik yang mengakomodasi nilai yang lebih kecil atau negatif sehingga menciptakan gradien yang lebih halus dan kontinu tanpa menghilangkan input sepenuhnya. Selanjutnya dilakukan regularisasi dengan menambahkan \textit{layer} Dropout sebesar 30\% dari total 512 input untuk mengurangi bias dan \textit{overfitting}. 512 input ini kemudian dipetakan menjadi 5 nilai yang merepresentasikan nilai kepribadian \textit{Big Five} menggunakan lapisan linear. Terakhir, \textit{layer} \textit{Sigmoid} digunakan untuk membatasi nilai \textit{output} prediksi kepribadian yang valid dalam rentang 0 hingga 1.
+\end{enumerate}
 
 \begin{figure}[H]
 	\centering
@@ -50,17 +57,9 @@ Penelitian ini memanfaatkan arsitektur Transformer sebagai (\textit{backbone}) u
 	\label{fig:custom-transformer-arch}
 \end{figure}
 
-Adaptasi utama yang dilakukan dalam penelitian ini adalah mengubah fungsi model dari klasifikasi menjadi regresi multi-target (multi-target regression). Umumnya model-model tersebut memiliki lapisan akhir (\textit{head}) berupa lapisan linier (\textit{fully connected layer}) dengan ribuan neuron \textit{output} sesuai dengan jumlah kelas klasifikasi yang diikuti oleh fungsi aktivasi \textit{softmax}. Struktur ini tidak relevan untuk prediksi nilai kepribadian yang bersifat kontinu. Arsitektur model dirancang menggunakan dua komponen utama, yaitu \textit{backbone} dan \textit{regression head}. Visualisasi arsitektur ini dapat dilihat pada Gambar \ref{fig:custom-transformer-arch}. Berikut adalah penjelasan bagian dari arsitektur.
-
-\begin{enumerate}[nosep]
-	\item \textit{Backbone} Transformer, bagian ini menggunakan \textit{pre-trained} Transformer ViT, Swin V2, dan PvT V2. \textit{Backbone} ini bertugas mengubah citra \textit{input} menjadi representasi vektor global dengan dimensi $D$, di mana $D$ bergantung pada varian model yang digunakan.
-
-	\item \textit{Custom regression head}, bagian ini berfungsi untuk mengadaptasi model Transformer yang umumnya digunakan untuk klasifikasi. Berbeda dengan \textit{head} klasifikasi standar, \textit{head} ini dirancang khusus untuk tugas regresi \textit{multi-output}. Komponen ini terdiri dari lapisan linear \textit{fully connected} dengan matriks \textit{weight} $W \in \mathbb{R}^{D \times 512}$, yang memetakan vektor fitur $D$ ke 512 neuron \textit{output} untuk memadatkan vektor fitur \textit{backbone} Transformer. \textit{Output} ini kemudian melewati \textit{hidden layer} \textit{Gaussian Error Linear Units} (GELU) untuk memetakan fitur non linear pada \textit{regression head}. Dibandingkan dengan ReLU, GELU bersifat \textit{smooth} dan probabilistik yang mengakomodasi nilai yang lebih kecil atau negatif sehingga menciptakan gradien yang lebih halus dan kontinu tanpa menghilangkan input sepenuhnya. Selanjutnya dilakukan regularisasi dengan menambahkan \textit{layer} Dropout sebesar 30\% dari total 512 input untuk mengurangi bias dan \textit{overfitting}. 512 input ini kemudian dipetakan menjadi 5 nilai yang merepresentasikan nilai kepribadian \textit{Big Five} menggunakan lapisan linear. Terakhir, \textit{layer} \textit{Sigmoid} digunakan untuk membatasi nilai \textit{output} prediksi kepribadian yang valid dalam rentang 0 hingga 1.
-\end{enumerate}
-
 \subsection{Mekanisme Prediksi dan Pelatihan Model Kepribadian \textit{Big Five}}
 
-Setelah fitur visual diekstraksi oleh \textit{backbone} Transformer, model melakukan proses pelatihan model dengan melakukan prediksi nilai kepribadian yang dilanjutkan dengan \textit{backpropagation} untuk memperbarui bobot model. Alur mekanisme ini diilustrasikan pada Gambar \ref{fig:training-prediction}.
+Fitur visual dari input gambar awalnya diekstraksi oleh \textit{backbone} Transformer. Selanjutnya, model memasuki tahap pelatihan model dengan melakukan prediksi nilai kepribadian yang dilanjutkan dengan \textit{backpropagation} untuk memperbarui bobot model. Alur mekanisme ini diilustrasikan pada Gambar \ref{fig:training-prediction}.
 
 \begin{figure}[H]
 	\centering
@@ -167,18 +166,19 @@ Proses integrasi ini terdiri dari lima tahapan utama:
 
 \subsection{Perancangan Sistem Asesmen Interpretasi Kepribadian}
 
-Sistem asesmen interpretasi kepribadian disusun sebagai sarana untuk mengakses model prediksi dan interpretasi kepribadian secara terintegrasi menggunakan \textit{Application Programming Interface} API agar dapat digunakan dengan mudah oleh pengguna.
+Sistem asesmen interpretasi kepribadian disusun sebagai sarana untuk mengakses model prediksi dan interpretasi kepribadian secara terintegrasi menggunakan \textit{Application Programming Interface} (API). Tujuan dari penggunaan API adalah untuk memudahkan pengguna mengakses dan menggunakan sistem. Mekanisme komunikasi pada sistem ditunjukkan oleh gambar \ref{fig:assesment-system}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{gambar/assesment-system.png}
+	\includegraphics[width=0.9\linewidth]{gambar/assesment-system.png}
 	\caption{Diagram Alir Sistem Interpretasi Kepribadian}
 	\label{fig:assesment-system}
 \end{figure}
-Sistem ini terdiri dari tiga komponen, yaitu API Inferensi, API Interpretasi, dan antarmuka pengguna. Mekanisme komunikasi antara ketiga komponen ditunjukkan oleh gambar \ref{fig:assesment-system}.
+
+Sistem ini terdiri dari tiga komponen, yaitu API Inferensi, API Interpretasi, dan antarmuka pengguna. 
 
 \subsubsection{API Inferensi}
-API inferensi menyediakan akses bagi pengguna untuk melakukan prediksi nilai kepribadian \textit{Big Five}. Tugas dari API inferensi meliputi praproses gambar yang diterima dari pengguna dan inferensi menggunakan model prediksi yang menghasilkan nilai kepribadian \textit{Big Five} untuk digunakan pada tahap interpretasi selanjutnya. 
+API inferensi menyediakan akses bagi pengguna untuk melakukan prediksi nilai kepribadian \textit{Big Five}. Tugas dari API inferensi meliputi praproses gambar yang diterima dari pengguna dan inferensi menggunakan model prediksi. Komponen ini menghasilkan nilai kepribadian \textit{Big Five} yang akan digunakan pada tahap interpretasi selanjutnya. 
 
 \subsubsection{API Interpretasi}
 API interpretasi merupakan sistem yang mengintegrasikan API inferensi dengan layanan OpenRouter API untuk menghasilkan deskripsi interpretasi kepribadian yang dapat dipahami oleh pengguna. API interpretasi memiliki beberapa tugas untuk menghasilkan hasil interpretasi kepribadian dari input berupa gambar yang dikirim oleh pengguna, yaitu:
@@ -197,31 +197,32 @@ Untuk menjembatani interaksi antara pengguna dengan sistem, diperlukan tampilan 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{gambar/inference-interface.png}
+	\includegraphics[width=0.9\linewidth]{gambar/inference-interface.png}
 	\caption{\textit{Wireframe} Tampilan Inferensi}
 	\label{fig:antarmuka-inferensi}
 \end{figure}
 
 Alur pengggunaan antarmuka inferensi dimulai dari pengguna mengunggah gambar wajah pada bagian \textit{upload image} dan memilih model inferensi yang diinginkan pada bagian \textit{inference model}. Pengguna kemudian menekan tombol \textit{predict personality} untuk mengirim \textit{request} menuju server. Hasil yang didapatkan berupa nilai kepribadian \textit{Big Five} dan gambar hasil praproses yang digunakan model prediksi kepribadian untuk melakukan inferensi. Prototipe tampilan antarmuka inferensi dapat dilihat pada Gambar \ref{fig:antarmuka-inferensi}.
 
+Selanjutnya untuk antarmuka interpretasi digunakan untuk menguji integrasi antara API Interpretasi, API Inferensi, dan layanan LLM melalui OpenRouter API. Prototipe tampilan antarmuka interpretasi ditunjukkan oleh Gambar \ref{fig:antarmuka-interpretasi}. Pengguna mengunggah gambar wajah, kemudian memilih model inferensi yang tersedia pada API Inferensi, selanjutnya pengguna memilih LLM dan gaya respons yang digunakan. \textit{Output} yang dihasilkan setelah pengguna menekan tombol \textit{interpret personality} adalah hasil prediksi \textit{Big Five} dan deskripsi interpretasi kepribadian yang dihasilkan dari LLM. Pengguna juga dapat menyimpan hasil interpretasi dalam bentuk JSON yang dapat digunakan untuk evaluasi hasil interpretasi kepribadian.  
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{gambar/interpretation-interface.png}
+	\includegraphics[width=0.9\linewidth]{gambar/interpretation-interface.png}
 	\caption{\textit{Wireframe} Tampilan Interpretasi}
 	\label{fig:antarmuka-interpretasi}
 \end{figure}
 
-Selanjutnya untuk antarmuka interpretasi digunakan untuk menguji integrasi antara API Interpretasi, API Inferensi, dan layanan LLM melalui OpenRouter API. Prototipe tampilan antarmuka interpretasi ditunjukkan oleh Gambar \ref{fig:antarmuka-interpretasi}. Pengguna mengunggah gambar wajah, kemudian memilih model inferensi yang tersedia pada API Inferensi, selanjutnya pengguna memilih LLM dan gaya respons yang digunakan. \textit{Output} yang dihasilkan setelah pengguna menekan tombol \textit{interpret personality} adalah hasil prediksi \textit{Big Five} dan deskripsi interpretasi kepribadian yang dihasilkan dari LLM. Pengguna juga dapat menyimpan hasil interpretasi dalam bentuk JSON yang dapat digunakan untuk evaluasi hasil interpretasi kepribadian.  
-
 \subsection{Skenario Evaluasi}
 
-Evaluasi sistem dilakukan secara menyeluruh yang mencakup dua aspek utama, yaitu kinerja model regresi dalam memprediksi nilai kepribadian \textit{Big Five} dan kualitas teks interpretasi kepribadian yang dihasilkan oleh LLM.
+Evaluasi terhadap sistem asesmen kepribadian ini dilakukan secara komprehensif yang terbagi dalam dua fokus pengujian utama. Aspek pertama ditujukan untuk mengukur tingkat akurasi kinerja model regresi dalam memprediksi nilai numerik kepribadian \textit{Big Five}. Selanjutnya, aspek kedua difokuskan untuk mengevaluasi kualitas dan kelayakan teks interpretasi deskriptif kepribadian yang dihasilkan oleh LLM.
 
 \subsubsection{Evaluasi Model Prediksi Kepribadian \textit{Big Five}}
 
 Evaluasi model prediksi dilakukan dengan mengukur akurasi prediksi nilai numerik kepribadian terhadap nilai ground truth. Tugas akhir ini menggunakan metrik evaluasi regresi standar yang meliputi MAE untuk mengukur rata-rata kesalahan absolut prediksi, $\text{Accuracy}$ untuk merepresentasikan tingkat ketepatan model dalam skala 0 hingga 1, RMSE untuk mendeteksi kesalahan prediksi yang bernilai besar, serta \textit{Coefficient of Determination} ($R^2$) untuk melihat seberapa baik model dapat menjelaskan variabilitas data. Metrik utama yang digunakan untuk menentukan model terbaik adalah $\text{Accuracy}$ Terdapat 6 model \textit{pretrained} yang diujikan. Model-model yang diujikan ditunjukkan oleh \autoref{tab:model-list}.
 
 {
+	\footnotesize
 	\renewcommand{\arraystretch}{1.3} % Melonggarkan spasi antar baris
 	\noindent
 	
@@ -243,7 +244,7 @@ Evaluasi model prediksi dilakukan dengan mengukur akurasi prediksi nilai numerik
 		% --- Header Halaman Lanjutan (Jika Terpotong ke Halaman Berikutnya) ---
 		\caption*{Lanjutan \autoref{tab:model-list}} \\
 		\hline
-		\textbf{Model} & \textbf{Deskripsi} \arraybackslash \\ \hline
+		\centering\textbf{Model} & \textbf{Deskripsi} \arraybackslash \\ \hline
 		\endhead
 		
 		% --- Footer Sementara (Muncul di bawah halaman jika tabel terpotong) ---
@@ -267,9 +268,10 @@ Evaluasi model prediksi dilakukan dengan mengukur akurasi prediksi nilai numerik
 	\end{xltabular}
 }
 
-Setiap model dilatih menggunakan \textit{hyperparameter} yang dijelaskan pada \autoref{tab:hyperparameter}. Proses pelatihan menggunakan \textit{early stopping} dengan $\text{patience} = 5$ untuk mencegah \textit{overfitting}. Pelatihan model menggunakan strategi \textit{differential learning rate} dimana bagian \textit{backbone} dilatih dengan \textit{learning rate} yang lebih kecil dari \textit{regression head} untuk melindungi generalisasi fitur yang telah dipelajari pada \textit{backbone} model \textit{pretrained} dan mempercepat konvergensi pada \textit{regression head}. \textit{Learning rate} pada pelatihan model untuk setiap \textit{epoch} disesuaikan secara dinamis menggunakan \textit{cosine annealing scheduler}, dimana \textit{learning rate} diturunkan secara bertahap mengikuti kurva kosinus hingga maksimal parameter yang ditentukan. Hal ini dilakukan agar model dapat mencapai titik konvergensi yang lebih presisi. Penurunan nilai \textit{learning rate} yang semakin melandai di akhir proses pelatihan memungkinkan \textit{weight update} yang lebih halus sehingga mencegah model mengalami osilasi saat sudah berada di dekat titik minimum \textit{loss} global. Teknik \textit{gradient clipping} juga digunakan dengan \textit{L2Norm} untuk mencegah gradien yang terlalu besar (\textit{exploding gradient}) yang menyebabkan perubahan \textit{weight} secara drastis.
+Setiap model dilatih menggunakan \textit{hyperparameter} yang dijelaskan pada \autoref{tab:hyperparameter}. Proses pelatihan menggunakan \textit{early stopping} dengan $\text{\textit{patience}} = 5$ untuk mencegah \textit{overfitting}. Pelatihan model menggunakan strategi \textit{differential learning rate} dimana bagian \textit{backbone} dilatih dengan \textit{learning rate} yang lebih kecil dari \textit{regression head} untuk melindungi generalisasi fitur yang telah dipelajari pada \textit{backbone} model \textit{pretrained} dan mempercepat konvergensi pada \textit{regression head}. \textit{Learning rate} pada pelatihan model untuk setiap \textit{epoch} disesuaikan secara dinamis menggunakan \textit{cosine annealing scheduler}, dimana \textit{learning rate} diturunkan secara bertahap mengikuti kurva kosinus hingga maksimal parameter yang ditentukan. Hal ini dilakukan agar model dapat mencapai titik konvergensi yang lebih presisi. Penurunan nilai \textit{learning rate} yang semakin melandai di akhir proses pelatihan memungkinkan \textit{weight update} yang lebih halus sehingga mencegah model mengalami osilasi saat sudah berada di dekat titik minimum \textit{loss} global. Teknik \textit{gradient clipping} juga digunakan dengan \textit{L2Norm} untuk mencegah gradien yang terlalu besar (\textit{exploding gradient}) yang menyebabkan perubahan \textit{weight} secara drastis.
 
 {
+	\footnotesize
 	\renewcommand{\arraystretch}{1.3} % Melonggarkan spasi antar baris
 	
 	% Menggunakan longtable biasa: lebar tabel akan pas dengan isi dan otomatis di tengah halaman
@@ -366,9 +368,10 @@ Setiap model dilatih menggunakan \textit{hyperparameter} yang dijelaskan pada \a
 %	\end{xltabular}
 %}
 
-Selain itu, dilakukan uji ablasi dengan 4 jenis skenario yang dibuat untuk setiap model dengan tujuan mengetahui pengaruh skenario yang diujikan terhadap kinerja model. Detail mengenai skenario yang diujikan dapat dilihat pada \autoref{tab:skenario-uji}.  
+Selain itu, dilakukan uji ablasi dengan 4 jenis skenario yang dibuat untuk setiap model. Tujuan dari uji ablasi ini adalah untuk mengetahui pengaruh skenario yang diujikan terhadap kinerja model. Detail mengenai skenario yang diujikan dapat dilihat pada \autoref{tab:skenario-uji}.  
 
 {
+	\footnotesize
 	\renewcommand{\arraystretch}{1.3} % Melonggarkan spasi antar baris
 	\noindent
 	
@@ -417,6 +420,7 @@ Selain itu, dilakukan uji ablasi dengan 4 jenis skenario yang dibuat untuk setia
 Evaluasi kualitas teks interpretasi dilakukan menggunakan G-Eval dengan GPT-5.1 sebagai evaluator. Pendekatan ini dipilih karena GPT-5.1 memiliki korelasi tinggi dengan penilaian manusia dan mampu melakukan penalaran bertahap (\textit{Chain-of-Thought}) dalam memberikan skor. Terdapat tiga jenis kriteria yang digunakan dalam mengevaluasi teks hasil generasi interpretasi kepribadian yang ditunjukkan oleh \autoref{tab:kriteria-eval-llm}. Tiga kriteria ini ditujukan untuk menilai kualitas hasil generasi teks layaknya seorang psikolog profesional yang melakukan asesmen kepribadian sesuai dengan gambar yang diberikan. G-Eval memberikan nilai antara 0 hingga 1 untuk setiap kriteria yang diberikan. Terdapat dua jenis skenario yang dibuat untuk menguji pengaruh \textit{role-play prompt} terhadap kualitas narasi interpretasi kepribadian yang dihasilkan. Skenario 1 adalah skenario menggunakan rancangan \textit{prompt} yang dijelaskan pada \autoref{subsec:rancangan-prompt} dan skenario 2 adalah skenario 1 tanpa menggunakan strategi \textit{role-play prompting} sehingga \textit{prompt} yang disusun terdiri dari tiga segmen blok informasi tanpa \textit{System Instruction}.
 
 {
+	\footnotesize
 	\renewcommand{\arraystretch}{1.3} % Melonggarkan spasi antar baris
 	\noindent
 	
@@ -451,7 +455,7 @@ Evaluasi kualitas teks interpretasi dilakukan menggunakan G-Eval dengan GPT-5.1 
 		\endlastfoot
 		
 		% --- Isi Data Tabel ---
-		1 & Koherensi Gambar & Menilai kesesuaian dan konsistensi fitur fisik atau kesan visual dalam teks interepretasi kepribadian dengan gambar yang diberikan. \\ \hline
+		1 & Koherensi Gambar & Menilai kesesuaian dan konsistensi fitur fisik atau kesan visual dalam teks interpretasi kepribadian dengan gambar yang diberikan. \\ \hline
 		2 & Akurasi Penilaian Psikologis & Mengevaluasi akurasi dan kesesuaian interpretasi kepribadian terhadap nilai kepribadian \textit{Big Five} yang diberikan. \textit{Openness} tinggi harus berkaitan dengan deskripsi kreativitas/rasa ingin tahu. \textit{Conscientiousness} tinggi harus menyebutkan kedisiplinan/keteraturan. Extraversion tinggi harus menggambarkan keramahan sosial. \textit{Agreeableness} tinggi harus merujuk pada kerja sama/empati. \textit{Neuroticism} tinggi harus sesuai dengan sensitivitas emosional. Skor rendah jika teks bertentangan atau mengabaikan skor kepribadian.\\ \hline
 		3 & Persona Psikolog & Mengevaluasi persona/gaya teks generasi interpretasi kepribadian layaknya seorang psikolog yang memberikan asesmen kepribadian dengan nada empatik, hangat, dan profesional yang terwujud secara natural tanpa menyebutkan diri sebagai seorang psikolog. Skor rendah jika kesan respons terlalu kaku, dingin, atau santai. \\
 		
@@ -462,13 +466,11 @@ Evaluasi kualitas teks interpretasi dilakukan menggunakan G-Eval dengan GPT-5.1 
 
 \section{Bahan dan Peralatan yang Digunakan}
 
-Tugas akhir ini dilaksanakan menggunakan peralatan pendukung yang terdiri dari perangkat keras dan perangkat lunak. Perangkat keras yang digunakan adalah laptop HP Victus 15 dengan prosesor AMD Ryzen 5 240, RAM 16GB, dan GPU NVIDIA RTX 5050 yang digunakan untuk pengembangan kode dan praproses data, serta sumber daya \textit{cloud computing} menggunakan platform runpod yang menyediakan GPU NVIDIA RTX 5090 untuk akselerasi proses pelatihan model. Selain itu, Huggingface Spaces dan Azure VM digunakan untuk proses \textit{deployment} sistem asesmen kepribadian yang meliputi tahap inferensi dan interpretasi. Adapun perangkat lunak yang digunakan adalah Jupyter Notebook yang menyediakan lingkungan pelatihan model. Implementasi sistem dibangun menggunakan bahasa pemrograman Python dengan dukungan \textit{library} PyTorch Image Models (timm) untuk \textit{deep learning}, MediaPipe dan OpenCV untuk pengolahan visual, serta penggunaan OpenRouter API untuk mengakses LLM yang digunakan dalam tahap interpretasi.
-\\
-\\
-\\
+Tugas akhir ini dilaksanakan menggunakan peralatan pendukung yang terdiri dari perangkat keras dan perangkat lunak. Perangkat keras yang digunakan adalah laptop HP Victus 15 dengan prosesor AMD Ryzen 5 240, RAM 16GB, dan GPU NVIDIA RTX 5050 yang digunakan untuk pengembangan kode dan praproses data, serta sumber daya \textit{cloud computing} menggunakan platform runpod yang menyediakan GPU NVIDIA RTX 5090 dengan VRAM 32GB untuk akselerasi proses pelatihan model. Selain itu, Huggingface Spaces dan Azure VM digunakan untuk proses \textit{deployment} sistem asesmen kepribadian yang meliputi tahap inferensi dan interpretasi. Adapun perangkat lunak yang digunakan adalah Jupyter Notebook yang menyediakan lingkungan pelatihan model. Implementasi sistem dibangun menggunakan bahasa pemrograman Python dengan dukungan \textit{library} PyTorch Image Models (timm) untuk \textit{deep learning}, MediaPipe dan OpenCV untuk pengolahan visual, serta penggunaan OpenRouter API untuk mengakses LLM yang digunakan dalam tahap interpretasi.
+
 \section{Urutan Pelaksanaan Penelitian}
 
-Bagian ini membahas mengenai langkah-langkah penelitian secara detail, meliputi proses dan kode semu yang digunakan pada penelitian.
+Bagian ini menguraikan secara rinci langkah-langkah teknis dan urutan pelaksanaan yang dilakukan selama penelitian ini berlangsung. Rangkaian tahapan tersebut mencakup implementasi praproses dataset visual, alur pelatihan model prediksi regresi, perancangan sistem asesmen kepribadian, hingga proses evaluasi kinerja akhir. Guna memberikan pemahaman yang komprehensif mengenai logika komputasi yang diterapkan, setiap tahapan implementasi dilengkapi dengan penjabaran kode semu secara sistematis.
 
 \subsection{Implementasi Praproses Dataset}
 
@@ -527,7 +529,7 @@ Implementasi tahapan praproses dataset pada bagian ini meliputi ekstraksi \texti
 	\nopagebreak
 	\captionof{algorithm}{Implementasi Praproses Dataset dari Video menjadi Gambar}
 	\label{alg:praproses-dataset}
-	\vspace{1ex}
+%	\vspace{1ex}
 	
 %	\caption{}
 %	\label{alg:praproses-dataset}
@@ -575,7 +577,7 @@ Tahap selanjutnya adalah pembuatan label untuk setiap gambar dan \textit{upload}
 	
 	\captionof{algorithm}{Pemberian Label dan Upload Dataset ke HuggingFace}
 	\label{alg:label-dataset}
-	\vspace{1ex}
+%	\vspace{1ex}
 }
 
 Tahap terakhir yang dilakukan adalah pengubahan ukuran gambar, augmentasi untuk skenario dengan augmentasi, dan normalisasi gambar. Pada tahap ini, untuk setiap gambar pada dataset, dilakukan pengubahan ukuran gambar sesuai dengan input arsitektur model, kemudian apabila diperlukan augmentasi, dilakukan \textit{horizontal flip} secara acak dengan kemungkinan 0.5, rotasi acak dengan sudut maksimal $10^\circ$, dan pengubahan kecerahan serta kontras secara acak dengan intensitas 0.2. Selanjutnya dilakukan konversi gambar menjadi unit tensor yang dapat diproses oleh model serta penerapan normalisasi \textit{Z-score} dengan nilai standar yang didapatkan dari dataset ImageNet. Implementasi secara detail dapat dilihat pada \autoref{alg:preprocessing-augmentation}. 
@@ -615,13 +617,13 @@ Tahap terakhir yang dilakukan adalah pengubahan ukuran gambar, augmentasi untuk 
 	\nopagebreak
 	
 	\captionof{algorithm}{Implementasi Pengubahan Ukuran Gambar, Augmentasi, dan Normalisasi}
-		\label{alg:preprocessing-augmentation}
-		\vspace{1ex}
+	\label{alg:preprocessing-augmentation}
+%	\vspace{1ex}
 }
 
 \subsection{Implementasi Alur Pelatihan Model}
 
-Pengujian skenario dan model prediksi dilakukan pada tahap ini. Model yang digunakan terdiri dari enam model \textit{pretrained} yang disebutkan pada \autoref{tab:model-list} dan setiap model diujikan menggunakan empat skenario yang dijelaskan pada \autoref{tab:skenario-uji} sehingga terdapat total 24 kali pelatihan model dalam tahap ini. Input yang diberikan berupa dataset mentah yang sebelumnya telah di \textit{upload} ke HuggingFace, daftar model \textit{pretrained} yang digunakan, dan konfigurasi skenario. Pada proses pelatihan digunakan dataset \textit{split train} untuk melatih model dan \textit{val} untuk validasi model pada setiap \textit{epoch}. Setiap model menggunakan \textit{hyperparameter} yang sama yang dijelaskan pada \autoref{tab:hyperparameter}. Proses \textit{checkpointing} pada setiap \textit{epoch} dilakukan untuk menyimpan parameter dan \textit{weight} model terbaik sehingga proses pelatihan dapat dilanjutkan jika terdapat kesalahan tanpa harus mengulang dari awal. Setiap model terbaik pada setiap perulangan disimpan dan di\textit{upload} ke repositori HuggingFace untuk selanjutnya digunakan pada tahap evaluasi untuk mencari model terbaik. Detail implementasi alur pelatihan model dapat dilihat pada \autoref{alg:training-loop}.      
+Pengujian skenario dan model prediksi dilakukan pada tahap ini. Model yang digunakan terdiri dari enam model \textit{pretrained} yang disebutkan pada \autoref{tab:model-list} dan setiap model diujikan menggunakan empat skenario yang dijelaskan pada \autoref{tab:skenario-uji} sehingga terdapat total 24 kali pelatihan model dalam tahap ini. Input yang diberikan berupa dataset mentah yang sebelumnya telah di \textit{upload} ke HuggingFace, daftar model \textit{pretrained} yang digunakan, dan konfigurasi skenario. Pada proses pelatihan digunakan dataset \textit{split train} untuk melatih model dan \textit{val} untuk validasi model pada setiap \textit{epoch}. Setiap model menggunakan \textit{hyperparameter} yang sama yang dijelaskan pada \autoref{tab:hyperparameter}. Proses \textit{checkpointing} pada setiap \textit{epoch} dilakukan untuk menyimpan parameter dan \textit{weight} model terbaik sehingga proses pelatihan dapat dilanjutkan jika terdapat kesalahan tanpa harus mengulang dari awal. Setiap model terbaik pada setiap perulangan disimpan ke repositori HuggingFace untuk selanjutnya digunakan pada tahap evaluasi untuk mencari model terbaik. Implementasi alur pelatihan model dapat dilihat pada \autoref{alg:training-loop}.      
 
 {
 	\vspace{2ex}
@@ -689,7 +691,7 @@ Pengujian skenario dan model prediksi dilakukan pada tahap ini. Model yang digun
 	
 	\captionof{algorithm}{Proses Pelatihan Model Prediksi Kepribadian dengan Berbagai Skenario}
 	\label{alg:training-loop}
-	\vspace{1ex}
+%	\vspace{1ex}
 }
 
 
@@ -724,7 +726,7 @@ Sistem asesmen kepribadian terdiri dari API Inferensi dan API Interpretasi untuk
 		\State $ImageSize \gets \text{GetTargetResolution}(ModelType)$
 		\State $ImgResized \gets \text{Resize}(CroppedFace, ImageSize \times ImageSize)$
 		\State $Tensor \gets \text{ConvertToTensor}(ImgResized)$
-		\State $Normalized \gets \text{Normalize}(Tensor, \mu=[0.485, 0.456, 0.406], \sigma=[0.229, 0.224, 0.225])$ \Comment{Normalisasi gambar}
+		\State $Normalized \gets \text{Normalize}(Tensor, \mu=[0.485, 0.456, 0.406], \sigma=[0.229, 0.224, 0.225])$ %\Comment{Normalisasi gambar}
 		\State $InputBatch \gets \text{AddBatchDimension}(Normalized)$
 		
 		\State $Model \gets \text{LoadPretrainedModel}(ModelType)$ \Comment{Muat model prediksi ke memori} 
@@ -732,7 +734,7 @@ Sistem asesmen kepribadian terdiri dari API Inferensi dan API Interpretasi untuk
 		
 		\State $RawScores \gets Model(InputBatch)$ \Comment{Proses inferensi model}
 		
-		\State $BigFiveTraits \gets \emptyset$ \Comment{Standarisasi prediksi ke format Big Five}
+		\State $BigFiveTraits \gets \emptyset$ \Comment{Standarisasi prediksi ke format \textit{Big Five}}
 		\State $BigFiveTraits.\text{Extraversion} \gets RawScores[0]$
 		\State $BigFiveTraits.\text{Neuroticism} \gets RawScores[1]$
 		\State $BigFiveTraits.\text{Agreeableness} \gets RawScores[2]$
@@ -749,7 +751,7 @@ Sistem asesmen kepribadian terdiri dari API Inferensi dan API Interpretasi untuk
 	
 	\captionof{algorithm}{Alur Utama API Inferensi Prediksi Kepribadian \textit{Big Five}}
 	\label{alg:inference-api}
-	\vspace{1ex}
+%	\vspace{1ex}
 }
 
 API interpretasi menerima input dari pengguna berupa gambar, konfigurasi model yang digunakan untuk inferensi, jenis LLM, dan gaya respons. Selanjutnya, gambar dan konfigurasi model inferensi dikirimkan menuju API inferensi untuk mendapatkan hasil prediksi kepribadian \textit{Big Five}. Setelah hasil didapatkan, API Interepretasi membuat \textit{request} ke LLM melalui OpenRouter dengan gambar, hasil inferensi API inferensi, dan \textit{prompt} yang telah dibuat pada direktori lokal dan mendapatkan hasil berupa teks hasil interpretasi kepribadian berdasarkan gambar dan nilai kepribadian \textit{Big Five}. Implementasi API Interpretasi dapat dilihat pada \autoref{alg:interpretation-api}. 
@@ -807,13 +809,13 @@ API interpretasi menerima input dari pengguna berupa gambar, konfigurasi model y
 	
 	\captionof{algorithm}{Alur Utama API Interpretasi Kepribadian}
 	\label{alg:interpretation-api}
-	\vspace{1ex}
+%	\vspace{1ex}
 }
 
 
 \subsection{Implementasi Alur Evaluasi Sistem Asesmen}
 
-Bagian ini membahas mengenai implementasi alur evaluasi sistem asesmen yang terdiri dari model prediksi regresi \textit{Big Five} dan interpretasi kepribadian.
+Bagian ini menguraikan tahapan implementasi logis yang digunakan untuk mengukur kinerja akhir dari keseluruhan sistem asesmen kepribadian yang telah dibangun. Proses pengujian ini dibagi menjadi dua alur evaluasi utama, yakni pengukuran tingkat presisi prediksi model regresi visual terhadap nilai ground truth, serta penilaian otomatis menggunakan metrik G-Eval terhadap kualitas narasi interpretasi yang dihasilkan oleh LLM. Kedua mekanisme evaluasi tersebut diimplementasikan secara terstruktur untuk memastikan validitas sistem asesmen.
 
 \subsubsection{Implementasi Evaluasi Model Prediksi Regresi Kepribadian \textit{Big Five}}
 
@@ -880,7 +882,7 @@ Evaluasi model prediksi regresi kepribadian \textit{Big Five} dilakukan mengguna
 	
 	\captionof{algorithm}{Alur Evaluasi dan Pemilihan Model Prediksi Regresi \textit{Big Five} Terbaik}
 	\label{alg:model-evaluation}
-	\vspace{1ex}
+%	\vspace{1ex}
 }
 
 \subsubsection{Implementasi Evaluasi Kualitas Interpretasi Kepribadian}
