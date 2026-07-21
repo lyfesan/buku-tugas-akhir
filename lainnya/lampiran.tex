@@ -1,0 +1,45 @@
+\section{Pengakuan Penggunaan Alat Berbasis Kecerdasan Buatan (AI)}
+
+{
+	\renewcommand{\arraystretch}{1.5}
+	
+	% Kolom 1: c (Center, selebar angka)
+	% Kolom 2: l (Left, selebar nama teks AI)
+	% Kolom 3: X (Dinamis, mengambil seluruh sisa lebar kertas untuk paragraf)
+	\begin{xltabular}{\textwidth}{| c | l | X |}
+		
+		% --- 1. CAPTION UTAMA ---
+		%\caption{Pengakuan Penggunaan AI Generatif}
+		%\label{tab:pengakuan-ai} \\
+		\hline
+		
+		% --- HEADER UTAMA ---
+		\textbf{No} & \textbf{Nama Alat AI} & \multicolumn{1}{c|}{\textbf{Penggunaan}} \\ \hline
+		\endfirsthead
+		
+		% --- 2. HEADER HALAMAN LANJUTAN ---
+		%\caption*{Lanjutan \autoref{tab:pengakuan-ai}} \\
+		\hline
+		\textbf{No} & \textbf{Nama Alat AI} & \multicolumn{1}{c|}{\textbf{Penggunaan}} \\ \hline
+		\endhead
+		
+		% --- 3. FOOTER SEMENTARA ---
+		\hline
+		\multicolumn{3}{|r|}{\textit{Berlanjut ke halaman berikutnya...}} \\ \hline
+		\endfoot
+		
+		% --- 4. FOOTER AKHIR ---
+		\hline
+		\endlastfoot
+		
+		% --- ISI TABEL ---
+		1 & Consensus AI & Digunakan untuk mempercepat pencarian referensi pada tinjauan dan penelitian terdahulu. \\ \hline
+		
+		2 & NotebookLM & Membantu memberikan rangkuman pada referensi/\textit{paper} yang didapat untuk memudahkan pemahaman isi referensi. \\ \hline
+		
+		3 & Gemini & Digunakan untuk membantu memperbaiki tata bahasa penulisan serta memberikan saran penyusunan struktur kalimat pada tugas akhir. \\ \hline
+		
+		4 & Claude & Membantu menyusun dan melakukan format dokumen agar sesuai dengan kaidah ilmiah pada \LaTeX. \\ \hline
+		
+	\end{xltabular}
+}

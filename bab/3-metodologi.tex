@@ -819,7 +819,7 @@ Bagian ini menguraikan tahapan implementasi logis yang digunakan untuk mengukur 
 
 \subsubsection{Implementasi Evaluasi Model Prediksi Regresi Kepribadian \textit{Big Five}}
 
-Evaluasi model prediksi regresi kepribadian \textit{Big Five} dilakukan menggunakan dataset \textit{split test} untuk menentukan model terbaik. Metrik yang digunakan untuk memilih model terbaik adalah akurasi yang dinormalisasi, yang merupakan metrik standar dalam dataset Chalearn. Model terbaik yang dipilih adalah model prediksi terbaik secara keseluruhan dan model terbaik untuk setiap \textit{trait Big Five}. Implementasi alur evaluasi model prediksi regresi kepribadian dapat dilihat pada \autoref{alg:model-evaluation}. 
+Evaluasi model prediksi regresi kepribadian \textit{Big Five} dilakukan menggunakan dataset \textit{split test} untuk menentukan model terbaik. Metrik yang digunakan untuk memilih model terbaik adalah akurasi, yang merupakan metrik standar dalam dataset Chalearn. Model terbaik yang dipilih adalah model prediksi terbaik secara keseluruhan dan model terbaik untuk setiap \textit{trait Big Five}. Implementasi alur evaluasi model prediksi regresi kepribadian dapat dilihat pada \autoref{alg:model-evaluation}. 
 
 {
 	\vspace{2ex}
@@ -852,23 +852,21 @@ Evaluasi model prediksi regresi kepribadian \textit{Big Five} dilakukan mengguna
 		
 		\State \textbf{Perhitungan Metrik Evaluasi}
 		\State $ModelMAE \gets \text{MeanAbsoluteError}(AllLabels, AllPredictions)$
-		\State $DummyMAE \gets \text{MeanAbsoluteError}(AllLabels, DummyMeans)$
 		\State $RMSE \gets \text{RootMeanSquaredError}(AllLabels, AllPredictions)$
 		\State $R2Score \gets \text{R2Score}(AllLabels, AllPredictions)$
 		
 		\State $Accuracy \gets 1 - ModelMAE$ \Comment{Hitung akurasi absolut (1 - MAE)}
-		\State $NormalizedAccuracy \gets 1 - \frac{ModelMAE}{DummyMAE}$ \Comment{Akurasi yang dinormalisasi}
 		
-		\State $ModelResults \gets \{Model, ModelMAE, DummyMAE, RMSE, R2Score, Accuracy, NormalizedAccuracy\}$
+		\State $ModelResults \gets \{Model, ModelMAE, RMSE, R2Score, Accuracy\}$
 		\State $Results \gets Results \cup ModelResults$
 		\EndFor
 		
 		\State \textbf{Seleksi Model Terbaik}
-		\State $BestOverallModel \gets \text{ArgMax}(Results, \text{key}=\text{Mean}(NormalizedAccuracy))$ \Comment{Terbaik rata-rata}
+		\State $BestOverallModel \gets \text{ArgMax}(Results, \text{key}=\text{Mean}(Accuracy))$ \Comment{Terbaik rata-rata}
 		
 		\State $BestPerTraitModels \gets \emptyset$
 		\For{\textbf{each} $Trait \in \{\text{O, C, E, A, N}\}$}
-		\State $BestModel \gets \text{ArgMax}(Results, \text{key}=NormalizedAccuracy_{Trait})$ \Comment{Pemilihan model terbaik per \textit{trait}}
+		\State $BestModel \gets \text{ArgMax}(Results, \text{key}=Accuracy_{Trait})$ \Comment{Pemilihan model terbaik per \textit{trait}}
 		\State $BestPerTraitModels \gets BestPerTraitModels \cup \{Trait: BestModel\}$
 		\EndFor
 		

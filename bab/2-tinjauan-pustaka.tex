@@ -5,10 +5,11 @@ Bab ini menguraikan tinjauan pustaka yang mencakup literatur penelitian terdahul
 % Ubah konten-konten berikut sesuai dengan isi dari tinjauan pustaka
 \section{Hasil Penelitian Terdahulu}
 
-Pada subbab ini, akan dibahas mengenai hasil penelitian-penelitian terdahulu yang relevan dengan topik penelitian ini. Hasil berbagai penelitian tersebut digunakan sebagai sumber informasi dan acuan pengembangan metode. Ulasan mengenai perbandingan metode, modalitas, serta kinerja yang dihasilkan oleh studi-studi tersebut dirangkum secara ringkas dalam \autoref{tab:penelitian-terkait}.
+Pada subbab ini, akan dibahas mengenai hasil penelitian-penelitian terdahulu yang relevan dengan topik penelitian ini. Hasil berbagai penelitian tersebut digunakan sebagai sumber informasi dan acuan pengembangan metode. Ulasan mengenai perbandingan metode, fokus penelitian, dan modalitas yang digunakan oleh studi-studi tersebut dirangkum secara ringkas dalam \autoref{tab:penelitian-terkait}.
 
 % Tabel Penelitian Terdahulu
 { % Buka grup pengaturan lokal
+	\footnotesize
 	\renewcommand{\arraystretch}{1.3} % Spasi vertikal (Padding)
 	\noindent % Mencegah tabel tergeser ke kanan
 
@@ -60,20 +61,28 @@ Pada subbab ini, akan dibahas mengenai hasil penelitian-penelitian terdahulu yan
 		Konten tekstual dari unggahan media sosial (tf-idf). &
 		Tugas akhir ini menggunakan arsitektur Transformer dengan modalitas gambar yang bisa menangkap konteks global yang lebih luas menggunakan mekanisme \textit{self-attention}. \\ \hline
 
+		\textit{An Effective Personality Prediction using Bidirectional Encoder Representations from Transformers with AdamW Optimizer} \parencite{Devi2024} &
+		Mengembangkan model prediksi kepribadian MBTI berbasis teks menggunakan BERT dan AdamW \textit{Optimizer} untuk ekstraksi fitur, dengan \textit{Linear Regression} untuk prediksi akhir. &
+		Teks, berasal dari dataset MBTI yang berisi esai yang telah dianotasi. &
+		Tugas akhir ini berfokus pada prediksi kepribadian \textit{Big Five} berbasis visual/gambar dan menggunakan LLM untuk interpretasi kualitatif hasil prediksi. \\ \hline
+		
 		\textit{PersonaLLM: Investigating the Ability of Large Language Models to Express Personality Traits} \parencite{Jiang2024} &
 		Menginvestigasi kemampuan LLM (GPT-3.5 dan GPT-4) untuk secara akurat dan konsisten merefleksikan profil kepribadian \textit{Big Five} yang ditetapkan melalui tes BFI dan penulisan cerita. &
 		Narasi teks yang dihasilkan oleh LLM. &
 		Tugas akhir ini menggunakan LLM sebagai alat interpretasi generatif yang menerima hasil prediksi visual sebagai input. \\ \hline
 
-		\textit{An Effective Personality Prediction using Bidirectional Encoder Representations from Transformers with AdamW Optimizer} \parencite{Devi2024} &
-		Mengembangkan model prediksi kepribadian MBTI berbasis teks menggunakan BERT dan AdamW \textit{Optimizer} untuk ekstraksi fitur, dengan \textit{Linear Regression} untuk prediksi akhir. &
-		Teks, berasal dari dataset MBTI yang berisi esai yang telah dianotasi. &
-		Tugas akhir ini berfokus pada prediksi kepribadian \textit{Big Five} berbasis visual/gambar dan menggunakan LLM untuk interpretasi kualitatif hasil prediksi. \\ \hline
-
 		\textit{Prediction of Personality Traits and Suitable Job through an Intelligent Interview Agent using Machine Learning} \parencite{Mandakini2023} &
 		Memprediksi skor \textit{big five personality} dari video wawancara menggunakan model CNN (VGG16), kemudian mengklasifikasikan peran pekerjaan yang sesuai. &
 		Video dari wawancara. &
 		Tugas akhir ini berfokus pada interpretasi psikologis kualitatif dari prediksi kepribadian \textit{Big Five} menggunakan arsitektur Transformer dan LLM. \\ \hline
+		
+		Prediksi Kepribadian Berbasis Gambar Wajah Dengan Arsitektur \textit{Dual-Branch Adaptive Distribution Fusion} Dan Integrasi Fitur Emosi \parencite{Aryan2025} & Mengusulkan arsitektur \textit{dual-branch Adaptive Distribution Fusion} (Ada-DF) untuk memprediksi lima dimensi kepribadian \textit{Big Five}. Fitur emosi diintegrasikan pada Ada-DF untuk memperkaya representasi data. & Gambar wajah yang diambil dari dataset Chalearn \parencite{Ponce-Lpez2016}. & Tugas akhir ini menggunakan model berbasis Transformer dengan arsitektur \textit{custom regression head} untuk memprediksi kepribadian \textit{Big Five}. Wajah pada \textit{frame} diekstraksi menggunakan BlazeFace \\ \hline
+		
+		Prediksi Kepribadian Berbasis Fitur Visual Menggunakan Arsitektur Swin Transformer Dan \textit{Multi-Frame Aggregation} \parencite{Wildan2026} & Mengembangkan model prediksi kepribadian berbasis fitur visual wajah menggunakan arsitektur Swin Transformer dan strategi \textit{Multi-Frame Aggregation}. Penelitian juga mengintegrasikan fitur emosi, \textit{frame attention}, \textit{temporal transformer}, \textit{quality-weighted loss}, serta \textit{face embedding} berbasis ArcFace guna meningkatkan kualitas representasi wajah. & Gambar yang diekstraksi dari video pada dataset Chalearn \parencite{Ponce-Lpez2016} & Tugas akhir ini menggunakan 15 \textit{frame} yang diekstrak dari video dan setiap \textit{frame} dianggap sebagai data independen dengan label yang sama. Selanjutnya dilakukan prediksi dan interpretasi menggunakan Transformer dan LLM. \\ \hline
+		
+		Evaluasi Fitur \textit{Handcrafted} dan Model \textit{Speech} Pralatih untuk Estimasi Kepribadian Big Five Berbasis Audio pada Protokol \textit{Strict Split} serta Analisis \textit{Fine-Tuning} Berbasis LoRA \parencite{Aqil2026} & Memprediksi nilai kepribadian \textit{Big Five} membandingkan fitur \textit{handcrafted} eGeMAPS dengan \textit{embedding model speech} pralatih wav2vec 2.0, HuBERT, dan WavLM dalam skema \textit{frozen feature extraction} menggunakan \textit{Ridge Regression}. Selain itu, dilakukan \textit{fine-tune} berbasis LoRA pada WavLM dan HuBERT. & Audio dari dataset ChaLearn \parencite{Ponce-Lpez2016} & Tugas akhir ini menggunakan modalitas visual video dari dataset yang dilakukan praproses menjadi gambar untuk memprediksi nilai kepribadian \textit{Big Five} menggunakan model berbasis Transformer. \\ \hline
+		
+		Prediksi \textit{Big Five Personality} pada Video Monolog Singkat Berbasis Video Transformer \parencite{Adyuta2026} & Memprediksi lima nilai \textit{Big Five Personality} menggunakan ViViT, TimeSformer, dan VideoMAE yang telah dilatih pada dataset Kinetics-400. &  Visual berupa urutan \textit{frame} wajah dari dataset ChaLearn \parencite{Ponce-Lpez2016}. & Tugas akhir ini menggunakan modalitas gambar statis yang diekstraksi dari video untuk memprediksi nilai kepribadian \textit{Big Five}. \\ \hline	
 
 	\end{xltabular}
 } % Tutup grup pengaturan lokal
@@ -103,14 +112,14 @@ Kepribadian didefinisikan sebagai kumpulan perbedaan individu yang biasa disebut
 
 \textit{ChaLearn First Impression} merupakan dataset yang digunakan untuk melakukan evaluasi otomatis terhadap ciri kepribadian tampak (\textit{apparent personality trait}) berdasarkan penilaian manusia \parencite{Ponce-Lpez2016}. Dataset ini dikembangkan untuk kompetisi \textit{ChaLearn Looking at People} yang bertujuan untuk mengatasi kurangnya data yang konsisten dalam prediksi kepribadian. Dataset ini terdiri dari 10000 klip video pendek dengan durasi rata-rata 15 detik yang diekstrak dari kurang lebih 3000 video HD YouTube mengenai orang-orang dari berbagai keragaman gender, usia, etnis, dan kebangsaan. 
 
+Subjek dalam video berbicara mengenai presentasi diri yang menyerupai wawancara di depan kamera seperti yang ditunjukkan pada Gambar \ref{fig:chalearn-dataset}. Setiap klip video diberi label yang didasarkan pada model kepribadian \textit{Big Five} yang mencakup \textit{Openness, Conscientiousness, Extraversion, Agreeableness,} dan \textit{Neuroticism}, dengan tambahan satu variabel \textit{interview} pekerjaan. Label tersebut diperoleh melalui penilaian persepsi pengamat manusia menggunakan platform \textit{Amazon Mechanical Turk} (AMT). Penilaian tersebut kemudian direpresentasikan dalam rentang 0 hingga 1 untuk setiap karakteristik kepribadian \textit{Big Five}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{gambar/chalearn-dataset.png}
 	\caption{Cuplikan Video dengan Label pada Dataset ChaLearn}
 	\label{fig:chalearn-dataset}
 \end{figure}
-
-Subjek dalam video berbicara mengenai presentasi diri yang menyerupai wawancara di depan kamera seperti yang ditunjukkan pada Gambar \ref{fig:chalearn-dataset}. Setiap klip video diberi label yang didasarkan pada model kepribadian \textit{Big Five} yang mencakup \textit{Openness, Conscientiousness, Extraversion, Agreeableness,} dan \textit{Neuroticism}, dengan tambahan satu variabel \textit{interview} pekerjaan. Label tersebut diperoleh melalui penilaian persepsi pengamat manusia menggunakan platform \textit{Amazon Mechanical Turk} (AMT). Penilaian tersebut kemudian direpresentasikan dalam rentang 0 hingga 1 untuk setiap karakteristik kepribadian \textit{Big Five}.
 
 \subsection{\textit{Deep Learning}}
 
@@ -143,7 +152,7 @@ Struktur inti Transformer terdiri dari \textit{encoder} dan \textit{encoder}. \t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{gambar/transformer.png}
+	\includegraphics[width=0.45\linewidth]{gambar/transformer.png}
 	\caption{Arsitektur Transformer \parencite{Vaswani2023}}
 	\label{fig:transformer-arch}
 \end{figure}
@@ -156,12 +165,12 @@ Vision Transformer (ViT) merupakan arsitektur yang mengadaptasi model Transforme
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{gambar/ViT.png}
+	\includegraphics[width=0.9\linewidth]{gambar/ViT.png}
 	\caption{Arsitektur Vision Transformer \parencite{Dosovitskiy2021}}
 	\label{fig:vit-arch}
 \end{figure}
 
-Proses ViT dimulai dengan membagi citra input dua dimensi menjadi urutan \textit{patch} berukuran tetap yang tidak saling tumpang tindih. \textit{Patch} ini diperlakukan seperti token/kata pada NLP. Setiap bagian \textit{patch} tersebut diratakan (\textit{flattened}) dan diproyeksikan secara linear melalui matriks \textit{embedding} untuk menghasilkan \textit{patch embeddings} dengan dimensi tetap \parencite{Dosovitskiy2021}. Karena urutan posisi pada  mekanisme \textit{self-attention} tidak penting, informasi spasial ditambahkan melalui \textit{positional encoding} satu dimensi agar model dapat memahami susunan relatif dan topologi dari setiap bagian citra \parencite{Papa2024}. Sebuah vektor \textit{embedding} khusus yang terinspirasi oleh token \texttt{[class]} pada model BERT (\textit{Bidirectional Encoder Representation from Transformers}) ditambahkan di awal \textit{sequence} yang berfungsi sebagai representasi agregat global dan akan digunakan oleh kepala MLP (\textit{Multi Layer Perceptron}) untuk klasifikasi \parencite{Dosovitskiy2021}.
+Berdasarkan \autoref{fig:vit-arch}, proses ViT dimulai dengan membagi citra input dua dimensi menjadi urutan \textit{patch} berukuran tetap yang tidak saling tumpang tindih. \textit{Patch} ini diperlakukan seperti token/kata pada NLP. Setiap bagian \textit{patch} tersebut diratakan (\textit{flattened}) dan diproyeksikan secara linear melalui matriks \textit{embedding} untuk menghasilkan \textit{patch embeddings} dengan dimensi tetap \parencite{Dosovitskiy2021}. Karena urutan posisi pada  mekanisme \textit{self-attention} tidak penting, informasi spasial ditambahkan melalui \textit{positional encoding} satu dimensi agar model dapat memahami susunan relatif dan topologi dari setiap bagian citra \parencite{Papa2024}. Sebuah vektor \textit{embedding} khusus yang terinspirasi oleh token \texttt{[class]} pada model BERT (\textit{Bidirectional Encoder Representation from Transformers}) ditambahkan di awal \textit{sequence} yang berfungsi sebagai representasi agregat global dan akan digunakan oleh kepala MLP (\textit{Multi Layer Perceptron}) untuk klasifikasi \parencite{Dosovitskiy2021}.
 
 \subsection{Swin Transformer}
 
@@ -169,7 +178,7 @@ Swin Transformer diperkenalkan sebagai arsitektur \textit{backbone} untuk \texti
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{gambar/swin-vs-vit.png}
+	\includegraphics[width=0.75\linewidth]{gambar/swin-vs-vit.png}
 	\caption{Perbedaan Arsitektur Swin Transformer dengan ViT \parencite{Liu2021}}
 	\label{fig:vit-vs-swin}
 \end{figure}
@@ -185,9 +194,9 @@ Berbeda dengan ViT yang menghasilkan pemetaan fitur dengan resolusi tunggal dan 
 
 Berdasarkan arsitektur Swin pada Gambar \ref{fig:swin-arch}, proses dimulai dengan membagi gambar RGB \textit{input} menjadi \textit{patch} yang tidak tumpang tindih berukuran $4\times4$ piksel melalui modul \textit{patch partition} dengan fitur yang merupakan penggabungan (\textit{concantenation}) dari nilai RGB mentah setiap piksel. Setiap \textit{patch} diperlakukan sebagai token dan diproyeksikan secara linear ke dimensi tertentu ($C$). Arsitektur ini terdiri dari empat tahapan dengan setiap tahap kecuali tahap pertama diawali dengan \textit{patch merging layer} yang menggabungkan $2\times2$ \textit{patch} tetangga untuk mengurangi jumlah token sebanyak 4 kali dan meningkatkan dimensi fitur sebanyak 2 kali \parencite{Liu2021}.
 
-Mekanisme \textit{Shifted Window based Self-Attention} menjadi keunggulan utama dari Swin Transformer dibandingkan dengan ViT. \textit{Attention} dihitung secara lokal di dalam \textit{windows} berukuran $M \times M$ yang membagi gambar secara merata tanpa tumpang tindih untuk efisiensi. Untuk menambahkan koneksi antar \textit{window} tanpa menambah beban komputasi, digunakan digunakan skema \textit{shifted windowing} pada blok Transformer yang berurutan. Blok pertama menggunakan partisi \textit{window} reguler, sedangkan blok berikutnya menggunakan konfigurasi partisi \textit{shifted window} sehingga informasi dapat melewati batas-batas \textit{window} pada \textit{layer} sebelumnya \parencite{Liu2021}.
+Mekanisme \textit{Shifted Window based Self-Attention} menjadi keunggulan utama dari Swin Transformer dibandingkan dengan ViT. \textit{Attention} dihitung secara lokal di dalam \textit{windows} berukuran $M \times M$ yang membagi gambar secara merata tanpa tumpang tindih untuk efisiensi. Untuk menambahkan koneksi antar \textit{window} tanpa menambah beban komputasi, digunakan skema \textit{shifted windowing} pada blok Transformer yang berurutan. Blok pertama menggunakan partisi \textit{window} reguler, sedangkan blok berikutnya menggunakan konfigurasi partisi \textit{shifted window} sehingga informasi dapat melewati batas-batas \textit{window} pada \textit{layer} sebelumnya \parencite{Liu2021}.
 
-Swin Transformer V2 dikembangkan untuk meningkatkan kapasitas model dan resolusi \textit{window} pada model sebelumnya \parencite{Liu2022}. Versi ini mengatasi masalah ketidakstabilan pelatihan pada model besar dan perbedaan resolusi antara fase \textit{pre-training} dan \textit{fine-tuning} melalui tiga teknik utama:
+Swin Transformer V2 dikembangkan untuk meningkatkan kapasitas model dan resolusi \textit{window} pada model sebelumnya \parencite{Liu2022}. \autoref{fig:swinv2} menunjukkan perbedaan arsitektur dengan versi sebelumnya. Versi ini mengatasi masalah ketidakstabilan pelatihan pada model besar dan perbedaan resolusi antara fase \textit{pre-training} dan \textit{fine-tuning} melalui tiga teknik utama:
 
 \begin{enumerate}[nolistsep]
 	\item \textit{Residual post-normalization}, mengganti konfigurasi \textit{pre-norm} dengan memindahkan lapisan \textit{Layer Normalization} (LN) ke bagian akhir setiap unit residual untuk mencegah ledakan nilai aktivasi pada lapisan yang lebih dalam.
@@ -199,7 +208,7 @@ Swin Transformer V2 dikembangkan untuk meningkatkan kapasitas model dan resolusi
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{gambar/swinv2.png}
+	\includegraphics[width=0.47\linewidth]{gambar/swinv2.png}
 	\caption{Perbedaan Swin Transformer V2 dengan V1 \parencite{Liu2022}}
 	\label{fig:swinv2}
 \end{figure}
@@ -210,7 +219,7 @@ Penggunaan teknik-teknik tersebut membuat Swin Transformer V2 menjadi model \tex
 
 \subsection{Pyramid Vision Transformer (PVT)}
 
-Pyramid Vision Transformer (PVT) diperkenalkan sebagai model \textit{backbone} Transformer serbaguna yang dapat digunakan untuk tugas-tugas pada \textit{computer vision} tanpa bergantung pada operasi konvolusi \parencite{Wang2021}. PVT mengadopsi struktur piramida yang memungkinkan pembentukan \textit{multi-scale feature maps} yang serupa dengan struktur hierarkis pada CNN.
+Pyramid Vision Transformer (PVT) diperkenalkan sebagai model \textit{backbone} Transformer serbaguna yang dapat digunakan untuk tugas-tugas pada \textit{computer vision} tanpa bergantung pada operasi konvolusi \parencite{Wang2021}. PVT mengadopsi struktur piramida yang memungkinkan pembentukan \textit{multi-scale feature maps} yang serupa dengan struktur hierarkis pada CNN, seperti yang ditunjukkan pada \autoref{fig:pvt}.
 
 \begin{figure}[H]
 	\centering
@@ -240,9 +249,9 @@ PVT v2 diperkenalkan sebagai pengembangan untuk mengatasi keterbatasan pada vers
 		\label{fig:pvt-v2}
 	\end{figure}
 
-	\item \textit{Overlapping Patch Embedding} (OPE), PVT v2 menggunakan konvolusi dengan \textit{zero padding} untuk mengimplementasikan \textit{patch embedding} yang saling tumpang tindih. Dengan memperbesar \textit{patch window} sehingga setengah area \textit{window} yang berdekatan saling tumpang tindih, model mampu menangkap informasi kontinuitas lokal dari gambar dan \textit{feature map} lebih baik dibandingkan metode \textit{non-overlapping} pada PVT v1.
+	\item \textit{Overlapping Patch Embedding} (OPE), PVT v2 menggunakan konvolusi dengan \textit{zero padding} untuk mengimplementasikan \textit{patch embedding} yang saling tumpang tindih, seperti yang ditunjukkan pada \autoref{fig:pvt-v2}. Dengan memperbesar \textit{patch window} sehingga setengah area \textit{window} yang berdekatan saling tumpang tindih, model mampu menangkap informasi kontinuitas lokal dari gambar dan \textit{feature map} lebih baik dibandingkan metode \textit{non-overlapping} pada PVT v1.
 
-	\item \textit{Convolutional Feed-Forward Network} (CFFN), PVT v2 menambahkan \textit{depth-wise convolution layer} berukuran $3 \times 3$ dengan \textit{zero padding} di dalam \textit{feed-forward network} untuk meningkatkan kemampuan ekstraksi fitur lokal. Penambahan ini tidak hanya menangkap kontinuitas lokal pada \textit{input tensor}, tetapi juga memberikan informasi posisi secara implisit sehingga penggunaan \textit{fixed-size positional encoding} yang tidak fleksibel pada versi sebelumnya dapat dihilangkan.
+	\item \textit{Convolutional Feed-Forward Network} (CFFN), PVT v2 menambahkan \textit{depth-wise convolution layer} berukuran $3 \times 3$ dengan \textit{zero padding} di dalam \textit{feed-forward network} untuk meningkatkan kemampuan ekstraksi fitur lokal, seperti yang ditunjukkan pada \autoref{fig:pvt-v2}. Penambahan ini tidak hanya menangkap kontinuitas lokal pada \textit{input tensor}, tetapi juga memberikan informasi posisi secara implisit sehingga penggunaan \textit{fixed-size positional encoding} yang tidak fleksibel pada versi sebelumnya dapat dihilangkan.
 
 \end{enumerate}
 
@@ -335,6 +344,6 @@ Kerangka kerja G-Eval diimplementasikan secara sistematis melalui integrasi tiga
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{gambar/g-eval.png}
-	\caption{Kerangka Kerja G-Eval \parencite{deepeval_metrics}}
+	\caption{Kerangka Kerja G-Eval \parencite{Liu2023}}
 	\label{fig:g-eval}
 \end{figure}

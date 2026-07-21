@@ -1,7 +1,7 @@
 \chapter{HASIL DAN PEMBAHASAN}
 \label{chap:hasilpembahasan}
 
-Bab ini memaparkan secara rinci hasil dari eksperimen yang telah dilakukan beserta analisis mendalam terhadap kinerja sistem asesmen kepribadian yang dibangun. Pembahasan pada bab ini dibagi menjadi dua bagian utama, yaitu pemaparan hasil implementasi teknis sistem dan evaluasi menyeluruh terhadap kinerja model-model yang diujikan. Proses evaluasi tersebut mencakup analisis metrik prediksi model regresi Transformer secara kuantitatif, serta tinjauan kualitatif terhadap narasi interpretasi yang dihasilkan oleh LLM menggunakan G-Eval.
+Bab ini memaparkan secara rinci hasil dari eksperimen yang telah dilakukan beserta analisis mendalam terhadap kinerja sistem asesmen kepribadian yang dibangun. Pembahasan pada bab ini dibagi menjadi dua bagian utama, yaitu pemaparan hasil implementasi teknis sistem dan evaluasi menyeluruh terhadap kinerja model-model yang diujikan. Proses evaluasi tersebut mencakup analisis metrik prediksi model regresi Transformer secara kuantitatif, serta tinjauan kualitatif terhadap narasi interpretasi yang dihasilkan oleh LLM menggunakan G-Eval dan ahli psikologi.
 
 \section{Hasil Penelitian}
 
@@ -10,7 +10,18 @@ Bagian ini memaparkan hasil dari serangkaian eksperimen yang telah dilakukan sel
 \subsection{Hasil Transformasi Dataset Video Menjadi Gambar}
 
 Dataset Chalearn berisi 10000 video yang dibagi menjadi tiga bagian (\textit{split}), yaitu data pelatihan (\textit{train}) dengan proporsi 60\% serta data validasi (\textit{validation}) dan data (\textit{test}) masing-masing 20\%. Pembagian ini dilakukan untuk mencapai keseimbangan yang optimal antara proses pembelajaran dan evaluasi model. Pembagian 60\% untuk data latih memberikan variasi sampel yang memadai bagi model agar dapat mengekstrak dan mempelajari representasi fitur visual wajah untuk mendeteksi ciri-ciri kepribadian pada gambar. Bagian 20\% untuk data validasi digunakan untuk mengukur kinerja model selama fase pelatihan, sekaligus menjadi acuan yang sangat
-penting dalam proses pengaturan hyperparameter dan aktivasi mekanisme \textit{early stopping} guna mencegah terjadinya \textit{overfitting}. Sementara itu, penggunaan 20\% untuk data uji memastikan tersedianya set data yang cukup besar dan independen untuk mengukur kinerja akhir serta kemampuan generalisasi model secara objektif pada data yang belum pernah dilihat sebelumnya. Karena fokus penelitian ini adalah modalitas gambar, maka dilakukan transformasi dataset Chalearn dengan mengekstraksi \textit{frame} pada video menjadi gambar statis yang dapat diproses oleh model prediksi dan LLM yang digunakan. 
+penting dalam proses pengaturan hyperparameter dan aktivasi mekanisme \textit{early stopping} guna mencegah terjadinya \textit{overfitting}. Sementara itu, penggunaan 20\% untuk data uji memastikan tersedianya set data yang cukup besar dan independen untuk mengukur kinerja akhir serta kemampuan generalisasi model secara objektif pada data yang belum pernah dilihat sebelumnya. Karena fokus penelitian ini adalah modalitas gambar, maka dilakukan transformasi dataset Chalearn dengan mengekstraksi \textit{frame} pada video menjadi gambar statis yang dapat diproses oleh model prediksi dan LLM yang digunakan.
+
+Pada tahap eksplorasi dan transformasi dataset, ditemukan sebuah karakteristik terkait label data (\textit{ground truth}). Terdapat sejumlah sampel klip video berdurasi 15 detik yang merupakan hasil pemotongan dari satu sumber video panjang yang sama, seperti yang ditunjukkan pada \autoref{fig:same-face-different-label}. Meskipun menampilkan subjek, pakaian, latar belakang, dan sesi perekaman yang sama persis, klip-klip hasil potongan ini sering kali memiliki label skor \textit{Big Five} yang berbeda. Perbedaan nilai kepribadian pada wajah yang sama ini disebabkan oleh mekanisme pelabelan dataset ChaLearn yang mengukur kepribadian tampak berdasarkan observasi singkat. Annotator manusia menilai setiap klip 15 detik secara independen berdasarkan impresi perilaku subjek pada rentang waktu tersebut tanpa mengetahui konteks video secara keseluruhan. Dalam satu video berdurasi panjang, umumnya dinamika perilaku seseorang akan berubah seiring waktu, misalnya transisi dari tertawa antusias menjadi berbicara serius. Hal ini dapat memengaruhi penilaian dari anotator. Namun, ketika klip-klip ini diekstrak menjadi citra wajah statis, konteks dinamis berupa suara dan gerak tersebut hilang. Kondisi ini memberikan tingkat kompleksitas pada dataset yang membuat model harus mengekstraksi fitur visual statis yang lebih mendalam dan representatif untuk memetakan variasi impresi kepribadian tersebut.
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{gambar/combined_same_face_diff_video.png}
+	\caption{Perbandingan \textit{Frame} pada Dataset dengan Wajah Sama yang Mempunyai Label Berbeda}
+	\label{fig:same-face-different-label}
+\end{figure}
+
+Proses transformasi dataset dari video menjadi gambar dilakukan dengan tetap mempertahankan proporsi awal pembagian dataset sehingga didapatkan dari hasil ekstraksi \textit{frame} 89.427 gambar untuk data \textit{train}, 29.817 gambar untuk data \textit{validation}, dan 29.828 gambar untuk data \textit{test}. Meskipun secara teoretis ekstraksi 10.000 video dengan rata-rata 15 \textit{frame} per video seharusnya menghasilkan sekitar 150.000 gambar, total akhir gambar yang berhasil diproses hanya berjumlah 149.072 gambar. Selisih jumlah ini menunjukkan adanya kegagalan deteksi pada tahap praproses. Pada beberapa \textit{frame} tertentu, model deteksi wajah tidak dapat menemukan area wajah akibat kualitas visual yang buruk di sebagian kecil durasi video, seperti pose ekstrem, kondisi sangat gelap, atau adanya objek yang menutupi wajah (\textit{occlusion}). \textit{Frame-frame} yang tidak memiliki deteksi wajah valid tersebut diabaikan dan dibuang dari populasi data agar tidak merusak proses pelatihan model. 
 
 {
 	\footnotesize
@@ -19,7 +30,7 @@ penting dalam proses pengaturan hyperparameter dan aktivasi mekanisme \textit{ea
 	\begin{xltabular}{\textwidth}{| l | X | r | r | r | r | r | r |}
 		
 		% --- Caption ---
-		\caption{Statistik Dataset (Train, Validation, Test)} 
+		\caption{Statistik Dataset (\textit{Train, Validation, Test})} 
 		\label{tab:statistik-dataset} \\
 		
 		% --- Header Halaman Pertama ---
@@ -71,7 +82,7 @@ penting dalam proses pengaturan hyperparameter dan aktivasi mekanisme \textit{ea
 	\end{xltabular}
 }
 
-Proses transformasi dataset dari video menjadi gambar dilakukan dengan tetap mempertahankan proporsi awal pembagian dataset sehingga didapatkan dari hasil ekstraksi \textit{frame} 89.427 gambar untuk data \textit{train}, 29.817 gambar untuk data \textit{validation}, dan 29.828 gambar untuk data \textit{test}. Meskipun secara teoretis ekstraksi 10.000 video dengan rata-rata 15 \textit{frame} per video seharusnya menghasilkan sekitar 150.000 gambar, total akhir gambar yang berhasil diproses hanya berjumlah 149.072 gambar. Selisih jumlah ini menunjukkan adanya kegagalan deteksi pada tahap praproses. Pada beberapa \textit{frame} tertentu, model deteksi wajah tidak dapat menemukan area wajah akibat kualitas visual yang buruk di sebagian kecil durasi video, seperti pose ekstrem, kondisi sangat gelap, atau adanya objek yang menutupi wajah (\textit{occlusion}). \textit{Frame-frame} yang tidak memiliki deteksi wajah valid tersebut diabaikan dan dibuang dari populasi data agar tidak merusak proses pelatihan model. 
+Berdasarkan rincian statistik yang ditunjukkan oleh \autoref{tab:statistik-dataset}, \textit{data splitting} yang dilakukan menunjukkan distribusi yang seimbang dan merata yang dibuktikan dari nilai rata-rata (\textit{mean}), standar deviasi, dan median kelima \textit{Big Five traits} yang konsisten antara data \textit{train}, \textit{validation}, dan \textit{test}. Keseragaman distribusi ini juga ditunjukkan oleh kurva densitas (\textit{density plot}) pada \autoref{fig:split-dataset-comparison} dengan perbandingan \textit{split} yang \textit{overlapping}. Sebaran label yang seimbang antar \textit{split} ini menciptakan kondisi ideal dalam pemodelan \textit{machine learning} untuk mencegah bias sekaligus menjamin bahwa evaluasi akhir pada data uji merepresentasikan kemampuan generalisasi model secara valid dan akurat.
 
 \begin{figure}[H]
 	\centering
@@ -80,7 +91,7 @@ Proses transformasi dataset dari video menjadi gambar dilakukan dengan tetap mem
 	\label{fig:split-dataset-comparison}
 \end{figure}
 
-Berdasarkan rincian statistik yang ditunjukkan oleh \autoref{tab:statistik-dataset}, \textit{data splitting} yang dilakukan menunjukkan distribusi yang seimbang dan merata yang dibuktikan dari nilai rata-rata (\textit{mean}), standar deviasi, dan median kelima \textit{Big Five traits} yang konsisten antara data \textit{train}, \textit{validation}, dan \textit{test}. Keseragaman distribusi ini juga ditunjukkan oleh kurva densitas (\textit{density plot}) pada \autoref{fig:split-dataset-comparison} dengan perbandingan \textit{split} yang \textit{overlapping}. Sebaran label yang seimbang antar \textit{split} ini menciptakan kondisi ideal dalam pemodelan \textit{machine learning} untuk mencegah bias sekaligus menjamin bahwa evaluasi akhir pada data uji merepresentasikan kemampuan generalisasi model secara valid dan akurat.   
+Tahapan transformasi dataset menjadi gambar ditunjukkan oleh \autoref{fig:dataset-transform}. Setiap video dilakukan ekstraksi \textit{frame} untuk setiap satu detik durasi video sehingga rata-rata \textit{frame} yang didapatkan untuk satu video sebanyak 15 \textit{frame}. Selanjutnya untuk setiap \textit{frame} dilakukan deteksi wajah utama dan pemberian \textit{padding} sebesar 30\% agar fitur wajah seperti rambut tidak terpotong. Terakhir, dilakukan \textit{cropping} pada bagian wajah dengan \textit{padding} untuk menghapus detail latar belakang yang tidak perlu yang dapat mengganggu konvergensi model saat proses pelatihan. Hasil gambar setelah dilakukan \textit{cropping} ini yang menjadi hasil akhir transformasi dataset sebelum dilakukan praproses.   
 
 \begin{figure}[H]
 	\centering
@@ -88,8 +99,6 @@ Berdasarkan rincian statistik yang ditunjukkan oleh \autoref{tab:statistik-datas
 	\caption{Proses Transformasi Dataset Video Menjadi Gambar}
 	\label{fig:dataset-transform}
 \end{figure}
-
-Tahapan transformasi dataset menjadi gambar ditunjukkan oleh \autoref{fig:dataset-transform}. Setiap video dilakukan ekstraksi \textit{frame} untuk setiap satu detik durasi video sehingga rata-rata \textit{frame} yang didapatkan untuk satu video sebanyak 15 \textit{frame}. Selanjutnya untuk setiap \textit{frame} dilakukan deteksi wajah utama dan pemberian \textit{padding} sebesar 30\% agar fitur wajah seperti rambut tidak terpotong. Terakhir, dilakukan \textit{cropping} pada bagian wajah dengan \textit{padding} untuk menghapus detail latar belakang yang tidak perlu yang dapat mengganggu konvergensi model saat proses pelatihan. Hasil gambar setelah dilakukan \textit{cropping} ini yang menjadi hasil akhir transformasi dataset sebelum dilakukan praproses.
 	
 \subsection{Hasil Praproses Dataset}
 
@@ -122,14 +131,14 @@ Bagian ini menyajikan pemaparan mengenai hasil pelatihan model regresi untuk pre
 	\label{fig:train-learning-dynamics}
 \end{figure}
 
-Berdasarkan visualisasi dinamika pembelajaran yang ditunjukkan pada \autoref{fig:train-learning-dynamics}, model menunjukkan pola konvergensi yang bervariasi selama fase pelatihan dan validasi. Pada kolom metrik \textit{Loss} (MAE), terlihat bahwa seluruh model berhasil mempelajari pola dari data latih yang ditandai dengan penurunan kurva \textit{training loss} secara konsisten di setiap \textit{epoch}. Namun, nilai \textit{validation loss} cenderung stagnan setelah beberapa \textit{epoch} awal. Kondisi ini memicu mekanisme \textit{early stopping} yang umumnya terjadi antara \textit{epoch} 6 hingga 9 untuk menghentikan proses pelatihan lebih awal guna mencegah terjadinya \textit{overfitting} di mana model terlalu mengingat data latih namun gagal menggeneralisasi data baru. Hal ini menunjukkan model \textit{pretrained} berbasis Transformer cenderung mengalami konvergensi yang cepat pada data validasi yang terjadi pada \textit{epoch} 1 atau 2.
+Berdasarkan visualisasi dinamika pembelajaran yang ditunjukkan pada \autoref{fig:train-learning-dynamics}, model menunjukkan pola konvergensi yang bervariasi selama fase pelatihan dan validasi. Pada kolom metrik \textit{Loss} (MAE), terlihat bahwa seluruh model berhasil mempelajari pola dari data latih yang ditandai dengan penurunan kurva \textit{training loss} secara konsisten di setiap \textit{epoch}. Namun, nilai \textit{validation loss} cenderung stagnan setelah beberapa \textit{epoch} awal. Kondisi ini memicu mekanisme \textit{early stopping} yang umumnya terjadi antara \textit{epoch} 6 hingga 9 untuk menghentikan proses pelatihan lebih awal guna mencegah terjadinya \textit{overfitting} di mana model terlalu mengingat data latih namun gagal menggeneralisasi data baru. Hal ini menunjukkan model \textit{pretrained} berbasis Transformer cenderung mengalami konvergensi yang cepat pada data validasi yang terjadi pada \textit{epoch} 1 atau 2. Analisis lebih lanjut mengenai penyebab serta validasi terhadap fenomena konvergensi prematur ini melalui studi ablasi dibahas pada \autoref{subsec:analisis-konvergensi-model-prediksi}.
 
 Ditinjau dari pengaruh skenario pengujian, implementasi \textit{custom regression head} memiliki dampak yang cukup signifikan. Skenario \textit{arch tuning} dan \textit{arch tuning + augmentation} secara konsisten mendominasi metrik kinerja di hampir seluruh arsitektur \textit{backbone}. Kedua skenario ini mendapatkan nilai \textit{accuracy} dan \textit{Coefficient of Determination} ($R^2$) yang lebih tinggi, serta nilai \textit{error} (RMSE dan MAE) yang lebih rendah dibandingkan dengan skenario \textit{baseline}. Di sisi lain, penerapan augmentasi gambar tanpa penyesuaian arsitektur menunjukkan kinerja paling tidak stabil dan sering kali berada di bawah kinerja \textit{baseline}, khususnya pada arsitektur ViT-B/16. Hal ini menunjukkan bahwa variabilitas data visual yang dihasilkan dari proses augmentasi memerlukan kapasitas representasi yang lebih kompleks dari \textit{custom regression head} agar dapat dipetakan secara optimal menjadi prediksi skor kepribadian yang akurat. Secara umum, penerapan augmentasi dan penggunaan
 \textit{custom regression head} yang lebih kompleks berdampak pada peningkatan kinerja pelatihan model yang lebih baik dengan mengurangi risiko \textit{overfitting} dini, sekaligus memperkuat kemampuan generalisasi model saat dihadapkan pada variasi data visual yang belum pernah dilihat sebelumnya. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{gambar/bar-all-val-metrics.png}
+	\includegraphics[width=\linewidth]{gambar/bar-all-val-metrics.png}
 	\caption{Metrik Kinerja Terbaik Model pada Proses Pelatihan}
 	\label{fig:best-metrics-training}
 \end{figure}
@@ -171,21 +180,21 @@ Selain dipengaruhi oleh pilihan LLM, kualitas dan format \textit{output} juga sa
 \section{Pembahasan}
 \label{sec:pembahasan}
 
-Bagian ini menyajikan analisis dan evaluasi terhadap sistem asesmen kepribadian hibrida yang diimplementasikan. Pembahasan diawali dengan membedah kinerja model regresi visual dalam memprediksi skor numerik kepribadian \textit{Big Five} guna menentukan arsitektur dan skenario pelatihan terbaik. Selanjutnya, fokus evaluasi dilanjutkan pada pengujian kualitas narasi interpretasi deskriptif yang dihasilkan oleh LLM berdasarkan metrik penilaian G-Eval.
+Bagian ini menyajikan analisis dan evaluasi terhadap sistem asesmen kepribadian hibrida yang diimplementasikan. Pembahasan diawali dengan pembahasan kinerja model regresi visual dalam memprediksi skor numerik kepribadian \textit{Big Five} guna menentukan arsitektur dan skenario pelatihan terbaik, dilanjutkan dengan menganalisis konvergensi prematur yang terjadi pada pelatihan model prediksi. Terakhir, fokus evaluasi dilanjutkan pada pengujian kualitas narasi interpretasi deskriptif yang dihasilkan oleh LLM berdasarkan metrik penilaian G-Eval serta evaluasi dari psikolog sebagai validasi ahli narasi kepribadian.
 
 \subsection{Evaluasi Model Prediksi Kepribadian}
+\label{subsec:evaluasi-model-prediksi}
 
 Model prediksi yang telah dilatih melalui empat jenis skenario dievaluasi menggunakan dataset \textit{split test} untuk menentukan model dengan kinerja terbaik secara keseluruhan. Evaluasi pada data uji ini dilakukan untuk mengukur kemampuan generalisasi model secara objektif saat dihadapkan pada variasi gambar wajah yang belum pernah dilihat sebelumnya selama fase pelatihan. Berdasarkan metrik evaluasi akhir yang ditunjukkan pada \autoref{fig:test-set-metrics}, skenario yang menggunakan \textit{custom regression head} kompleks menunjukkan keunggulan dibandingkan skenario lainnya. Skenario \textit{arch tuning} dan kombinasi \textit{arch tuning + augmentation} mendominasi pencapaian tingkat kesalahan terendah pada \textit{test} MAE dan \textit{test} RMSE sekaligus menghasilkan tingkat akurasi prediksi yang lebih tinggi dibandingkan dengan skenario \textit{baseline} maupun augmentasi.   
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{gambar/pred-model-test-metrics.png}
+	\includegraphics[width=0.9\linewidth]{gambar/pred-model-test-metrics.png}
 	\caption{Metrik Kinerja Model pada Dataset \textit{Test}}
 	\label{fig:test-set-metrics}	
 \end{figure}
 
 Analisis lebih rinci mengenai tingkat presisi model dapat dilihat pada \autoref{tab:accuracy_evaluation} yang menyajikan hasil evaluasi metrik akurasi pada data uji. Nilai numerik yang dicetak tebal pada tabel-tabel evaluasi di subbab ini merepresentasikan pencapaian metrik kinerja terbaik. Berdasarkan tabel tersebut, konfigurasi ViT-B/16 AugReg (IN21k) pada skenario \textit{Arch Tuning + Augmentation} menempati peringkat pertama dengan rata-rata akurasi tertinggi sebesar 0,911. Capaian ini bersaing sangat tipis dengan berbagai konfigurasi lainnya, seperti ViT-B/16 AugReg (IN21k+1k) dan kelompok SwinV2-B w12-16 yang menujukkan kinerja rata-rata akurasi di kisaran 0,910 hingga 0,911. Perbedaan nilai yang kecil ini menunjukkan bahwa sebagian besar arsitektur yang dilengkapi dengan \textit{custom regression head} berhasil mencapai batas kinerja maksimalnya dalam meminimalkan jarak kesalahan absolut secara rata-rata.
-
 
 {
 	\footnotesize 
@@ -274,93 +283,16 @@ Analisis lebih rinci mengenai tingkat presisi model dapat dilihat pada \autoref{
 
 Meskipun metrik akurasi menunjukkan batas kinerja yang hampir seragam, metrik ini belum cukup untuk mendefinisikan kemampuan model dalam menangkap variasi kepribadian secara utuh. Oleh karena itu, penentuan kemampuan generalisasi model juga ditinjau melalui metrik \textit{Test R-Squared} ($R^2$) yang dirangkum pada \autoref{tab:r2_evaluation}. Berbeda dengan fase validasi yang didominasi oleh Swin Transformer, evaluasi $R^2$ pada data uji independen ini menunjukkan arsitektur ViT-B/16 AugReg (IN21k) \textit{Arch Tuning + Augmentation} sebagai model dengan kinerja terbaik. Model tersebut menghasilkan puncak rata-rata $R^2$ sebesar 0,416 dan mengungguli pesaing terdekatnya, yaitu SwinV2-B w12-16 yang berada di angka 0,414. Hasil ini menunjukkan bahwa arsitektur ViT dengan AugReg memiliki ketahanan yang jauh lebih baik terhadap \textit{overfitting} saat dihadapkan pada variasi data baru. Jika digabungkan dengan teknik augmentasi dan \textit{custom regression head}, konfigurasi ini ditetapkan sebagai model inferensi terbaik untuk sistem interpretasi kepribadian.
 
-Analisis lebih mendalam mengenai perbedaan kemampuan prediksi pada masing-masing \textit{trait} kepribadian \textit{Big Five} tidak hanya dapat dilihat dari metrik agregat \autoref{tab:accuracy_evaluation} dan \autoref{tab:r2_evaluation}, tetapi juga divisualisasikan melalui \textit{heatmap} pada \autoref{fig:trait-metrics-heatmap}. Visualisasi \textit{heatmap} ini menggunakan gradasi warna untuk mempertegas perbedaan kinerja prediktif antar \textit{trait}, di mana warna biru tua merepresentasikan tingkat akurasi dan nilai $R^2$ yang tinggi, sedangkan warna kuning merepresentasikan nilai evaluasi yang rendah atau sulit dipelajari secara optimal oleh model. 
+Setelah menganalisis lebih lanjut mengenai metrik evaluasi pada \autoref{fig:test-set-metrics} dan \autoref{tab:accuracy_evaluation} serta \autoref{tab:r2_evaluation}, terdapat perbedaan signifikan antara nilai akurasi yang tinggi (0,90-0,91) dengan nilai $R^2$ yang jauh lebih rendah (0,33–0,49). Hal ini disebabkan oleh karakteristik definisi kedua metrik yang berbeda serta karakteristik distribusi label pada dataset. akurasi dihitung dari 1 − MAE sehingga nilainya realtif tinggi ketika target memiliki variansi kecil, sementara $R^2$ mengukur proporsi variansi individual yang berhasil dijelaskan model relatif terhadap \textit{baseline} rata-rata. Berdasarkan \autoref{tab:statistik-dataset}, kelima \textit{trait Big Five} secara konsisten memiliki nilai rata-rata di sekitar 0,50 dengan standar deviasi yang kecil, yakni hanya berkisar 0,13–0,16 pada seluruh \textit{split} data \textit{train, validation}, maupun \textit{test}. Karakteristik rata-rata 0,50 dan standar deviasi yang kecil ini dapat ditelusuri dari metodologi pelabelan dataset ChaLearn yang digunakan. Label \textit{ground truth} tidak diperoleh melalui penilaian skala langsung oleh masing-masing pekerja AMT, melainkan melalui perbandingan berpasangan (\textit{pairwise comparison}) antar video yang kemudian direkonstruksi menjadi skor kardinal melalui pencocokan model \textit{Bradley-Terry-Luce} (BTL) menggunakan estimasi \textit{maximum likelihood}. Pendekatan ini sengaja dipilih untuk mengurangi masalah kalibrasi antar pekerja individu, seperti kecenderungan terlalu keras atau terlalu lunak dalam menilai, dan melibatkan banyak suara (\textit{multiple votes}) per video untuk mengurangi variansi pada skor akhir dengan total 321.684 pasangan video yang dinilai untuk melabeli 10.000 video \parencite{Ponce-Lpez2016}. Kecilnya variansi label yang terdapat pada \autoref{tab:statistik-dataset} bukan merupakan karakteristik alami kepribadian manusia semata, melainkan dipengaruhi oleh desain metodologi pelabelan dataset yang ditujukan untuk menekan variansi akibat bias individu penilai. Bukti statistik atas dampak karakteristik data ini ditunjukkan oleh \textit{baseline blind random guess} pada \autoref{tab:accuracy_evaluation} dan \autoref{tab:r2_evaluation}, dengan menebak secara acak tanpa proses pembelajaran apa pun tetap mencapai rata-rata akurasi sebesar 0,8455, tetapi hanya menghasilkan $R^2$ sebesar 0,0505. Perbedaan drastis ini menunjukkan bahwa metrik akurasi cenderung jenuh (\textit{saturated}) dan memiliki batas bawah yang tinggi akibat sempitnya variansi label serta kurang sensitif terhadap \textit{outlier}, sedangkan $R^2$ jauh lebih sensitif dalam membedakan model yang benar-benar belajar dari model yang sekadar menebak nilai rata-rata.
 
-%{
-%	\footnotesize 
-%	\renewcommand{\arraystretch}{1.3} 
-%	
-%	\begin{xltabular}{\textwidth}{|
-%			>{\centering\arraybackslash\hsize=0.3\hsize}X |
-%			>{\raggedright\arraybackslash\hsize=1.8\hsize}X |
-%			>{\raggedright\arraybackslash\hsize=1.5\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |
-%			>{\centering\arraybackslash\hsize=0.9\hsize}X |}
-%		
-%		% --- 1. CAPTION UTAMA ---
-%		\caption{Perbandingan Nilai $R^2$ Model Prediksi Kepribadian pada Berbagai Skenario} 
-%		\label{tab:r2_evaluation} \\
-%		\hline
-%		
-%		% Header Kolom Utama
-%		\textbf{No} & 
-%		\textbf{Model} & 
-%		\textbf{Skenario} & 
-%		\textbf{\textit{Agree\-able\-ness}} & 
-%		\textbf{\textit{Con\-sci\-en\-tious\-ness}} & 
-%		\textbf{\textit{Ex\-traver\-sion}} & 
-%		\textbf{\textit{Neu\-roti\-cism}} & 
-%		\textbf{\textit{Open\-ness}} & 
-%		\textbf{\textit{Average}} \\ \hline
-%		\endfirsthead
-%		
-%		% --- 2. HEADER UNTUK HALAMAN LANJUTAN ---
-%		\caption*{Lanjutan \autoref{tab:r2_evaluation}} \\
-%		\hline
-%		\textbf{No} & 
-%		\textbf{Model} & 
-%		\textbf{Skenario} & 
-%		\textbf{\textit{Agree\-able\-ness}} & 
-%		\textbf{\textit{Con\-sci\-en\-tious\-ness}} & 
-%		\textbf{\textit{Ex\-traver\-sion}} & 
-%		\textbf{\textit{Neu\-roti\-cism}} & 
-%		\textbf{\textit{Open\-ness}} & 
-%		\textbf{\textit{Average}} \\ \hline
-%		\endhead
-%		
-%		% --- 3. FOOTER HALAMAN ---
-%		\hline
-%		\multicolumn{9}{r}{\textit{Berlanjut ke halaman berikutnya...}} \\
-%		\endfoot
-%		
-%		\hline
-%		\endlastfoot
-%		
-%		% --- ISI DATA ---
-%		\textbf{1} & \textbf{ViT-B/16 AugReg (IN21k)} & \textbf{\textit{Arch Tuning} + \textit{Augmentation}} & \textbf{0,2830} & \textbf{0,5301} & \textbf{0,4534} & \textbf{0,4224} & \textbf{0,3895} & \textbf{0,4157} \\ \hline
-%		2 & SwinV2-B w12-16 (IN22k+1k) & \textit{Arch Tuning} & 0,2911 & 0,5348 & 0,4613 & 0,4062 & 0,3784 & \textbf{0,4144} \\ \hline
-%		3 & ViT-B/16 AugReg (IN21k+1k) & \textit{Arch Tuning} + \textit{Augmentation} & 0,2864 & 0,5251 & 0,4575 & 0,4163 & 0,3790 & \textbf{0,4129} \\ \hline
-%		4 & SwinV2-B w12-16 (IN22k+1k) & \textit{Arch Tuning} + \textit{Augmentation} & 0,2888 & 0,5278 & 0,4381 & 0,4165 & 0,3916 & \textbf{0,4126} \\ \hline
-%		5 & ViT-B/16 AugReg (IN21k+1k) & \textit{Arch Tuning} & 0,2790 & 0,5267 & 0,4453 & 0,4070 & 0,3816 & \textbf{0,4079} \\ \hline
-%		6 & SwinV2-B w16 (IN1k) & \textit{Arch Tuning} & 0,2933 & 0,5202 & 0,4353 & 0,4019 & 0,3794 & \textbf{0,4060} \\ \hline
-%		7 & ViT-B/16 AugReg2 (IN21k+1k) & \textit{Arch Tuning} + \textit{Augmentation} & 0,2739 & 0,5205 & 0,4447 & 0,4097 & 0,3755 & \textbf{0,4049} \\ \hline
-%		8 & ViT-B/16 AugReg (IN21k) & \textit{Arch Tuning} & 0,2865 & 0,5190 & 0,4376 & 0,4066 & 0,3736 & \textbf{0,4047} \\ \hline
-%		9 & PVTv2-B5 (IN1k) & \textit{Arch Tuning} + \textit{Augmentation} & 0,2702 & 0,5187 & 0,4357 & 0,4208 & 0,3636 & \textbf{0,4018} \\ \hline
-%		10 & SwinV2-B w16 (IN1k) & \textit{Arch Tuning} + \textit{Augmentation} & 0,2867 & 0,4971 & 0,4238 & 0,3989 & 0,3647 & \textbf{0,3942} \\ \hline
-%		11 & PVTv2-B5 (IN1k) & \textit{Arch Tuning} & 0,2671 & 0,5125 & 0,4260 & 0,3909 & 0,3693 & \textbf{0,3932} \\ \hline
-%		12 & PVTv2-B5 (IN1k) & \textit{Augmentation} & 0,2777 & 0,4861 & 0,4187 & 0,3721 & 0,3673 & \textbf{0,3844} \\ \hline
-%		13 & ViT-B/16 AugReg2 (IN21k+1k) & \textit{Arch Tuning} & 0,2382 & 0,5250 & 0,4157 & 0,3802 & 0,3460 & \textbf{0,3810} \\ \hline
-%		14 & SwinV2-B w16 (IN1k) & \textit{Baseline} & 0,2473 & 0,4840 & 0,4225 & 0,3838 & 0,3501 & \textbf{0,3776} \\ \hline
-%		15 & SwinV2-B w12-16 (IN22k+1k) & \textit{Baseline} & 0,2276 & 0,4922 & 0,4162 & 0,3902 & 0,3437 & \textbf{0,3740} \\ \hline
-%		16 & PVTv2-B5 (IN1k) & \textit{Baseline} & 0,1944 & 0,5176 & 0,4238 & 0,3871 & 0,3351 & \textbf{0,3716} \\ \hline
-%		17 & SwinV2-B w16 (IN1k) & \textit{Augmentation} & 0,2452 & 0,4917 & 0,3989 & 0,3836 & 0,3362 & \textbf{0,3711} \\ \hline
-%		18 & ViT-B/16 AugReg2 (IN21k+1k) & \textit{Augmentation} & 0,2311 & 0,4713 & 0,4171 & 0,3701 & 0,3577 & \textbf{0,3695} \\ \hline
-%		19 & SwinV2-B w12-16 (IN22k+1k) & \textit{Augmentation} & 0,2269 & 0,4869 & 0,3788 & 0,3610 & 0,3473 & \textbf{0,3602} \\ \hline
-%		20 & ViT-B/16 AugReg (IN21k+1k) & \textit{Augmentation} & 0,1877 & 0,4737 & 0,4099 & 0,3786 & 0,3085 & \textbf{0,3517} \\ \hline
-%		21 & ViT-B/16 AugReg (IN21k+1k) & \textit{Baseline} & 0,2114 & 0,4714 & 0,3763 & 0,3750 & 0,3075 & \textbf{0,3483} \\ \hline
-%		22 & ViT-B/16 AugReg (IN21k) & \textit{Baseline} & 0,1966 & 0,4397 & 0,3871 & 0,3645 & 0,3348 & \textbf{0,3445} \\ \hline
-%		23 & ViT-B/16 AugReg2 (IN21k+1k) & \textit{Baseline} & 0,1811 & 0,4376 & 0,3821 & 0,3413 & 0,3400 & \textbf{0,3364} \\ \hline
-%		24 & ViT-B/16 AugReg (IN21k) & \textit{Augmentation} & 0,1989 & 0,4483 & 0,3870 & 0,3387 & 0,2963 & \textbf{0,3338} \\ \hline
-%		\multicolumn{9}{|c|}{} \\[-2ex] \hline
-%		- & \textit{Random Guess} & - & 0,0477 & 0,0528 & 0,0645 & 0,0413 & 0,0464 & \textbf{0,0505} \\ \hline
-%		
-%	\end{xltabular}
-%}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{gambar/scatter_plot_predictions_vs_ground_truth_ViT.png}
+	\caption{Perbandingan Nilai Prediksi Model Terhadap Nilai \textit{Ground Truth} pada Model dengan Konfigurasi Terbaik (ViT-B/16 AugReg (IN21k) \textit{Arch Tuning + Augmentation})}
+	\label{fig:scatter-plot-pred-vs-truth-best-model}	
+\end{figure}
 
+Pola yang terjadi pada metrik evaluasi ini juga ditunjukkan secara visual pada \autoref{fig:scatter-plot-pred-vs-truth-best-model} yang menampilkan \textit{scatter plot} antara nilai prediksi dan \textit{ground truth} untuk model terbaik pada seluruh skenario. Titik-titik prediksi menunjukkan kecenderungan regresi menuju rata-rata, yaitu memprediksi nilai lebih tinggi dari seharusnya pada wilayah \textit{ground truth} rendah dan nilai lebih rendah dari seharusnya pada wilayah \textit{ground truth} tinggi, sehingga model mengalami kesulitan dalam memprediksi variansi di luar nilai rata-rata populasi. Pola ini muncul karena model cenderung memberikan prediksi di sekitar nilai tengah ketika fitur visual pada gambar wajah tidak cukup kuat bagi model untuk memberikan prediksi ekstrem, sehingga strategi meminimalkan MAE justru mendorong model menghindari prediksi ekstrem yang berisiko menghasilkan kesalahan yang lebih lebih besar. Dengan demikian, rendahnya nilai $R^2$ pada penelitian ini tidak hanya mencerminkan keterbatasan model, tetapi merupakan dampak dari desain metrik evaluasi, karakteristik variansi pada dataset, serta batasan dalam memprediksi kepribadian tampak dari modalitas visual statis. Tingginya nilai akurasi pada penelitian ini tidak dapat diinterpretasikan sebagai indikator tunggal kualitas model. Nilai tersebut perlu dibaca berdampingan dengan $R^2$ sebagai metrik yang lebih representatif dalam menilai kemampuan model menangkap variasi kepribadian antar individu.
 
 {
 	\footnotesize 
@@ -447,12 +379,9 @@ Analisis lebih mendalam mengenai perbedaan kemampuan prediksi pada masing-masing
 	\end{xltabular}
 }
 
+Analisis lebih mendalam mengenai perbedaan kemampuan prediksi pada masing-masing \textit{trait} kepribadian \textit{Big Five} tidak hanya dapat dilihat dari metrik agregat \autoref{tab:accuracy_evaluation} dan \autoref{tab:r2_evaluation}, tetapi juga divisualisasikan melalui \textit{heatmap} pada \autoref{fig:trait-metrics-heatmap}. Visualisasi \textit{heatmap} ini menggunakan gradasi warna untuk mempertegas perbedaan kinerja prediktif antar \textit{trait}, di mana warna biru tua merepresentasikan tingkat akurasi dan nilai $R^2$ yang tinggi, sedangkan warna kuning merepresentasikan nilai evaluasi yang rendah atau sulit dipelajari secara optimal oleh model. 
+
 % menunjukkan adanya perbedaan kemampuan prediksi pada masing-masing \textit{trait} kepribadian \textit{Big Five}. Berdasarkan kedua metrik tersebut, seluruh model menunjukkan kinerja terbaik dalam memprediksi \textit{trait} \textit{Conscientiousness} dan \textit{Extraversion}. Pada model ViT-B/16, \textit{Conscientiousness} menyentuh tingkat akurasi tertinggi sebesar 0,917 dengan nilai $R^2$ mencapai 0,530 disusul oleh \textit{Extraversion} dengan akurasi 0,912 dan $R^2$ sebesar 0,453. Tingginya kemampuan model dalam memetakan kedua \textit{trait} ini menunjukkan dominasi sifat \textit{Conscientiousness} dan \textit{Extraversion} yang cenderung ditonjolkan melalui fitur fisik yang eksplisit pada gambar, seperti tingkat kerapian penampilan, intensitas senyuman, dan keterbukaan ekspresi wajah.
-
-Berdasarkan visualisasi \textit{heatmap} pada \autoref{fig:trait-metrics-heatmap}, seluruh model secara konsisten menunjukkan kinerja terbaik dalam memprediksi \textit{trait} \textit{Conscientiousness} dan \textit{Extraversion}. Hal ini terlihat jelas dari dominasi warna biru tua pada kedua kolom \textit{trait} tersebut di kedua metrik. Sebagai contoh pada model ViT-B/16, \textit{Conscientiousness} menyentuh tingkat akurasi tertinggi sebesar 0,917 dengan nilai $R^2$ mencapai 0,530, disusul oleh \textit{Extraversion} dengan akurasi 0,912 dan $R^2$ sebesar 0,453. Tingginya kemampuan model dalam memetakan kedua \textit{trait} ini menunjukkan dominasi sifat \textit{Conscientiousness} dan \textit{Extraversion} yang cenderung ditonjolkan melalui fitur fisik yang eksplisit pada gambar diam, seperti tingkat kerapian penampilan, intensitas senyuman, dan keterbukaan ekspresi wajah.
-
-Visualisasi \textit{heatmap} juga dengan sangat kontras menunjukkan karakteristik tantangan setiap \textit{trait} yang diprediksi oleh sistem. Analisis pada \textit{trait} yang paling sulit diprediksi jika ditinjau hanya dari jarak kesalahan absolut menggunakan metrik akurasi, \textit{Neuroticism} menunjukkan nilai paling rendah di angka 0,907. Namun, jika dilihat dari kemampuan model dalam memetakan variasi antar individu yang sebenarnya, \textit{Agreeableness} adalah \textit{trait} yang paling sulit dipelajari oleh seluruh model dengan nilai $R^2$ yang berada di kisaran 0,283 meskipun nilai akurasi tampak aman berada di angka 0,910. Penurunan nilai $R^2$ yang drastis ini menunjukkan batasan modalitas citra statis. \textit{Agreeableness} merupakan \textit{trait} kepribadian yang lebih banyak diekspresikan melalui interaksi sosial yang dinamis atau intonasi suara, sehingga sulit ditangkap secara utuh hanya dari sebuah gambar diam.
-
 
 \begin{figure}[H]
 	\centering
@@ -461,6 +390,7 @@ Visualisasi \textit{heatmap} juga dengan sangat kontras menunjukkan karakteristi
 	\label{fig:trait-metrics-heatmap}	
 \end{figure}
 
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{gambar/all_architectures_Run_D_The_Ultimate_test_showdown.png}
@@ -468,7 +398,36 @@ Visualisasi \textit{heatmap} juga dengan sangat kontras menunjukkan karakteristi
 	\label{fig:sample-prediction-test}	
 \end{figure}
 
+Berdasarkan visualisasi \textit{heatmap} pada \autoref{fig:trait-metrics-heatmap}, seluruh model secara konsisten menunjukkan kinerja terbaik dalam memprediksi \textit{trait} \textit{Conscientiousness} dan \textit{Extraversion}. Hal ini terlihat jelas dari dominasi warna biru tua pada kedua kolom \textit{trait} tersebut di kedua metrik. Sebagai contoh pada model ViT-B/16, \textit{Conscientiousness} menyentuh tingkat akurasi tertinggi sebesar 0,917 dengan nilai $R^2$ mencapai 0,530, disusul oleh \textit{Extraversion} dengan akurasi 0,912 dan $R^2$ sebesar 0,453. Tingginya kemampuan model dalam memetakan kedua \textit{trait} ini menunjukkan dominasi sifat \textit{Conscientiousness} dan \textit{Extraversion} yang cenderung ditonjolkan melalui fitur fisik yang eksplisit pada gambar diam, seperti tingkat kerapian penampilan, intensitas senyuman, dan keterbukaan ekspresi wajah.
+
+Visualisasi \textit{heatmap} juga dengan sangat kontras menunjukkan karakteristik tantangan setiap \textit{trait} yang diprediksi oleh sistem. Analisis pada \textit{trait} yang paling sulit diprediksi jika ditinjau hanya dari jarak kesalahan absolut menggunakan metrik akurasi, \textit{Neuroticism} menunjukkan nilai paling rendah di angka 0,907. Namun, jika dilihat dari kemampuan model dalam memetakan variasi antar individu yang sebenarnya, \textit{Agreeableness} adalah \textit{trait} yang paling sulit dipelajari oleh seluruh model dengan nilai $R^2$ yang berada di kisaran 0,283 meskipun nilai akurasi tampak aman berada di angka 0,910. Hal ini juga ditunjukkan oleh \textit{scatter plot} pada \autoref{fig:scatter-plot-pred-vs-truth-best-model} yang menunjukkan sebaran titik yang paling menjauh dari garis diagonal untuk \textit{trait} tersebut. Penurunan nilai $R^2$ yang drastis ini menunjukkan batasan modalitas citra statis. \textit{Agreeableness} merupakan \textit{trait} kepribadian yang lebih banyak diekspresikan melalui interaksi sosial yang dinamis atau intonasi suara, sehingga sulit ditangkap secara utuh hanya dari sebuah gambar diam.	
+
 Selain melalui metrik agregat, dinamika kinerja model juga dapat dievaluasi dengan melihat sampel prediksi skenario terbaik, yaitu \textit{Arch Tuning + Augmentation} yang divisualisasikan pada \autoref{fig:sample-prediction-test}. Visualisasi ini memperlihatkan fluktuasi nilai prediksi berbagai model saat dihadapkan pada beberapa sampel gambar pengujian. Model pada skenario ini menghasilkan sebaran prediksi yang tidak sekadar menebak skor di sekitar nilai rata-rata populasi tetapi juga menyesuaikan prediksi mengikuti keunikan fitur visual setiap wajah. Namun di sisi lain, visualisasi menunjukkan pada beberapa kasus tertentu, nilai prediksi model masih dapat melenceng cukup jauh dari nilai aktual (\textit{ground truth}). Penyimpangan ini merupakan hasil dari sifat kepribadian manusia yang sangat abstrak. Nilai \textit{ground truth} dalam dataset kepribadian umumnya bergantung pada anotasi pengamat manusia yang cenderung membawa sifat bias kognitif. Selain itu, modalitas citra wajah statis seringkali menampilkan kondisi yang bias seperti sudut pencahayaan, riasan yang menyamarkan fitur asli, atau pose anomali sesaat sehingga tampilan fisik individu pada satu detik tersebut sangat kontras dengan kepribadian aslinya. Adanya kasus-kasus (\textit{outlier}) ini menunjukkan bahwa meskipun sistem prediksi berbasis \textit{computer vision} mampu mengidentifikasi gambaran umum sifat seseorang, kepribadian manusia pada dasarnya terlalu rumit untuk dinilai secara pasti hanya dari sebuah foto statis.
+
+\subsection{Analisis Konvergensi Prematur pada Pelatihan Model Prediksi}
+\label{subsec:analisis-konvergensi-model-prediksi}
+
+Berdasarkan visualisasi dinamika pembelajaran pada grafik pelatihan pada \autoref{fig:train-learning-dynamics}, seluruh model pada penelitian ini menunjukkan pola konvergensi validasi yang cepat, di mana nilai \textit{validation loss} cenderung stagnan setelah beberapa \textit{epoch} awal, yang memicu mekanisme \textit{early stopping}. Hal ini mengindikasikan adanya konvergensi prematur (\textit{premature convergence}). Konvergensi yang cepat ini dipengaruhi oleh tiga faktor yang saling berkaitan. Pertama, penggunaan \textit{backbone} Transformer yang telah dilatih sebelumnya pada dataset ImageNet berskala besar membuat model tidak perlu mempelajari representasi visual dari awal sehingga model hanya perlu menyesuaikan pemetaan fitur yang telah dipelajari ke dalam tugas regresi kepribadian, sehingga proses adaptasi berlangsung jauh lebih singkat. Kedua, strategi \textit{differential learning rate} yang diterapkan turut mempercepat fenomena ini, di mana \textit{learning rate backbone} yang lebih kecil ($1\times10^{-5}$) dibandingkan \textit{regression head} ($1\times10^{-4}$) menyebabkan sebagian besar pembaruan \textit{weight} terjadi pada \textit{regression head} yang berukuran relatif kecil, sehingga \textit{head} ini dapat mencapai titik optimalnya hanya dalam beberapa epoch awal. Ketiga, karakteristik dataset yang dibangun dari ekstraksi 15 \textit{frame} per video memberikan volume data latih yang besar untuk setiap label kepribadian sehingga menciptakan relasi data \textit{many-to-one} pada label tunggal. Faktor terakhir ini menjadi penyebab utama konvergensi prematur dikarenakan pemetaan banyak data yang mengarah kepada satu label tunggal.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.89\linewidth]{gambar/combined_learning_process_curves_allframe_vs_singleframe.png}
+	\caption{Kurva Pelatihan Uji Ablasi Strategi Pengambilan Sampel Frame}
+	\label{fig:training-graph-ablation-frame-sampling}	
+\end{figure}
+
+Untuk mengevaluasi dampak dari relasi data \textit{many-to-one} ini terhadap kualitas pembelajaran, dilakukan uji ablasi strategi pengambilan sampel. Pengujian ini membandingkan penggunaan seluruh \textit{frame} (\textit{All Frame}) dengan penggunaan 1 \textit{frame} acak per video (\textit{Single Frame}) yang diujikan pada skenario model terbaik yang dibahas pada \autoref{subsec:evaluasi-model-prediksi}. Dinamika pelatihan dari kedua strategi tersebut divisualisasikan pada \autoref{fig:training-graph-ablation-frame-sampling}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{gambar/final_test_metrics_mae_acc_r2_single_vs_allframe.png}
+	\caption{Perbandingan Metrik Evaluasi Akhir Uji Ablasi pada Dataset Uji}
+	\label{fig:eval-metrics-ablation-frame-sampling}	
+\end{figure}
+
+Berdasarkan \autoref{fig:training-graph-ablation-frame-sampling}, skema \textit{All Frame} secara konsisten mencapai titik \textit{early stopping} jauh lebih cepat, yakni pada rentang 6–10 \textit{epoch}, dibandingkan skema \textit{Single Frame} yang memerlukan hingga 42 \textit{epoch} untuk mencapai kondisi konvergen. Kurva validasi $R^2$ dan akurasi pada skema \textit{Single Frame} juga menunjukkan fluktuasi yang lebih tajam, terutama pada skenario \textit{Baseline} yang mengindikasikan proses pelatihan yang kurang stabil pada setiap epoch. 
+
+Hasil pada \autoref{fig:eval-metrics-ablation-frame-sampling} menunjukkan bahwa model dengan skema \textit{All Frame} unggul pada seluruh metrik evaluasi yang diujikan pada data \textit{test}. Pada seluruh skenario pengujian, skema \textit{All Frame} secara konsisten menghasilkan nilai $R^2$ yang lebih tinggi dibandingkan dengan skema \textit{Single Frame}, dengan hasil terbaik diraih oleh skenario \textit{Arch Tuning + Augmentation} dengan MAE 0,089, akurasi 0,911, dan $R^2$ 0,416 pada skema \textit{All Frame} dibanding dengan skema \textit{Single Frame} dengan MAE 0,091, akurasi 0,909, dan $R^2$ 0,386. Keunggulan kinerja ini membuktikan bahwa laju konvergensi yang cepat pada \textit{All Frame} bukanlah sebuah kegagalan dalam melakukan generalisasi, melainkan akibat dari volume pembaruan \textit{weight} yang lebih padat di setiap \textit{epoch}. Skema Single Frame hanya menggunakan satu frame per video menyebabkan jumlah data latih berkurang drastis dari 89.427 gambar menjadi sekitar 5.962 gambar, atau berkurang sekitar 15 kali lipat. Pengurangan volume data ini menyebabkan pembaruan gradien model pada setiap epoch menjadi lebih sedikit dan tidak stabil, sekaligus membatasi variasi visual yang dapat dipelajari model dari satu \textit{frame} per label. Perlu diingat label \textit{ground truth} sejatinya diberikan berdasarkan observasi perilaku subjek secara utuh selama 15 detik, penggunaan seluruh \textit{frame} memberikan basis data statistik yang jauh lebih representatif untuk memetakan kepribadian tampak dibandingkan dengan mengandalkan satu cuplikan statis tunggal untuk setiap video. Dengan volume data yang jauh lebih besar, skema \textit{All Frame} memungkinkan model mempelajari variasi visual yang lebih kaya untuk setiap label kepribadian dalam waktu pelatihan yang lebih singkat, sehingga menghasilkan konvergensi yang lebih cepat sekaligus kemampuan generalisasi yang lebih baik.
 
 \subsection{Evaluasi Kualitas Interpretasi Kepribadian}
 
@@ -601,4 +560,74 @@ Berdasarkan kinerja metrik beserta kelebihan dan kekurangan yang telah dijelaska
 		
 	\end{xltabular}
 }
+
+Untuk memvalidasi lebih lanjut hasil evaluasi otomatis G-Eval tersebut, dilakukan evaluasi tambahan oleh pakar psikolog terhadap 20 narasi interpretasi yang dihasilkan dari kombinasi 5 gambar uji, kedua model LLM terpilih (Gemma-4-31B-IT dan Qwen3-VL-32B-Instruct), dan 2 gaya respons (\textit{standard} dan \textit{roleplay}). Penilaian dilakukan menggunakan kriteria yang dijelaskan pada \autoref{tab:kriteria-eval-llm} dengan tambahan satu kriteria, yaitu penilaian keseluruhan dari hasil interpretasi. Setiap kriteria penilaian menggunakan skala 1–5. Ringkasan hasil penilaian disajikan pada \autoref{tab:psychologist-interpretation-evaluation}.
+
+{
+	\footnotesize
+	\renewcommand{\arraystretch}{1.3} 
+	
+	\begin{xltabular}{\textwidth}{|
+			>{\raggedright\arraybackslash\hsize=1.5\hsize}X |
+			>{\centering\arraybackslash\hsize=0.8\hsize}X |
+			>{\centering\arraybackslash\hsize=0.9\hsize}X |
+			>{\centering\arraybackslash\hsize=0.9\hsize}X |
+			>{\centering\arraybackslash\hsize=1.0\hsize}X |
+			>{\centering\arraybackslash\hsize=0.9\hsize}X |}
+		
+		% --- 1. CAPTION UTAMA ---
+		\caption{Hasil Penilaian Psikolog Terhadap Kualitas Interpretasi Kepribadian} 
+		\label{tab:psychologist-interpretation-evaluation} \\
+		\hline
+		
+		% Header Kolom Utama
+		\textbf{\textit{LLM Model}} & \textbf{\textit{Prompt Style}} & \textbf{Koherensi Gambar} & \textbf{Akurasi Penilaian Psikologis} & \textbf{Persona Psikolog} & \textbf{\textit{Penilaian Keseluruhan}} \\ \hline
+		\endfirsthead
+		
+		% --- 2. HEADER UNTUK HALAMAN LANJUTAN ---
+		\caption*{Lanjutan \autoref{tab:psychologist-interpretation-evaluation}} \\
+		\hline
+		\textbf{\textit{LLM Model}} & \textbf{\textit{Prompt Style}} & \textbf{Koherensi Gambar} & \textbf{Akurasi Penilaian Psikologis} & \textbf{Persona Psikolog} & \textbf{\textit{Penilaian Keseluruhan}} \\ \hline
+		\endhead
+		
+		% --- 3. FOOTER HALAMAN ---
+		\hline
+		\multicolumn{6}{r}{\textit{Berlanjut ke halaman berikutnya...}} \\
+		\endfoot
+		
+		\hline
+		\endlastfoot
+		
+		% --- GRUP 1: GEMMA ---
+		gemma-4-31b-it & \textit{standard} & 2,40 & 2,60 & 3,00 & 3,00 \\ \hline
+		gemma-4-31b-it & \textit{roleplay} & 2,80 & 2,60 & 3,40 & 3,20  \\ \hline
+		
+		% --- GRUP 2: QWEN ---
+		qwen3-vl-32b-instruct & \textit{standard} & 2,80 & 3,00 & 3,00 & 3,20 \\ \hline
+		qwen3-vl-32b-instruct & \textit{roleplay} & 2,40 & 2,20 & 2,80 & 2,60 \\ \hline
+		
+		% --- PEMBATAS VISUAL (Memberi celah kosong tipis) ---
+		\multicolumn{6}{|c|}{} \\[-3ex] \hline
+		
+		% Rata-rata keseluruhan
+		\multicolumn{2}{|l|}{\textbf{Rata-rata Keseluruhan}} & \textbf{2,60} & \textbf{2,60} & \textbf{3,05} & \textbf{3,00} \\
+		
+	\end{xltabular}
+}
+
+\newpage
+Secara umum, nilai keempat kriteria penilaian berada di sekitar titik tengah skala atau bahkan di bawahnya. Koherensi gambar dan akurasi penilaian psikologis memperoleh rata-rata yang sama yaitu 2,60 atau 52\% dari skor maksimal. Sementara itu, persona psikolog mendapat rata-rata tertinggi sebesar 3,05 (61\%) diikuti penilaian keseluruhan sebesar 3,00 (60\%). Hal ini menunjukkan sistem lebih konsisten dalam menampilkan gaya bicara seperti psikolog profesional dibandingkan dengan kemampuan dalam menghasilkan interpretasi yang akurat secara klinis dan sesuai dengan gambar. Perlu dicatat juga bahwa dari 20 penilaian, psikolog tidak pernah memberi skor ekstrem (1 atau 5) pada aspek manapun, sehingga seluruh skor berada di rentang 2 hingga 4 saja.
+
+Ditinjau dari rata-rata per model, Gemma-4-31B-IT memperoleh skor penilaian keseluruhan sebesar 3,1, skor ini sedikit lebih tinggi dibanding Qwen3-VL-32B-Instruct yang memperoleh skor sebesar 2,9, meskipun Qwen3-VL-32B-Instruct sebelumnya ditetapkan sebagai model utama berdasarkan skor rata-rata tertinggi pada evaluasi G-Eval. Hal ini menunjukkan bahwa penilaian psikolog dan G-Eval yang menggunakan \textit{LLM-as-a-judge} tidak selalu sejalan dalam menentukan model yang secara keseluruhan memiliki kinerja lebih baik. Pola ini akan dibahas lebih lanjut setelah meninjau efek gaya respons pada masing-masing model. 
+
+Berdasarkan \autoref{tab:psychologist-interpretation-evaluation}, gaya respons memberikan pengaruh yang berbeda terhadap kualitas interpretasi antara kedua model. Pada Gemma-4-31B-IT, gaya \textit{roleplay} selalu lebih tinggi atau setidaknya sama dengan skor di semua aspek dibanding gaya \textit{standard}. Hal ini ditunjukkan pada metrik penilaian psikologis yang tetap, koherensi gambar dan persona psikolog yang naik sebesar 0,4 poin, serta penilaian keseluruhan yang naik sebesar 0,2 poin. Sebaliknya, pada Qwen3-VL-32B-Instruct, gaya \textit{roleplay} justru menurunkan skor di semua aspek dibanding gaya \textit{standard}, dengan penurunan koherensi gambar sebesar 0,4, akurasi penilaian psikologis sebesar 0,8, persona psikolog sebesar 0,2, dan penilaian keseluruhan sebesar 0,6. dengan penurunan terbesar pada Akurasi Penilaian Psikologis. Kombinasi Qwen3-VL-32B-Instruct dengan gaya \textit{roleplay} menjadi kombinasi dengan skor terendah di semua aspek. Perbedaan ini disebabkan oleh bagaimana cara masing-masing model menyusun narasinya. Ketika menggunakan gaya \textit{roleplay}, Gemma-4-31B-IT	 selalu berfokus hanya pada gambar wajah subjek tanpa membahas latar belakang atau elemen lain di luar wajah, sehingga narasinya tetap terarah dan sesuai dengan prinsip membaca kepribadian dari fitur wajah. Sedangkan respons model Qwen3-VL-32B-Instruct ketika menggunakan gaya \textit{roleplay} menunjukkan hasil yang tidak konsisten. Terkadang interpretasi model fokus pada wajah saja, tetapi terkadang juga ikut membahas latar atau elemen di sekitar subjek. Tidak konsistennya hasil interpretasi ini juga dibahas pada catatan khusus dari psikolog untuk kombinasi Qwen3-VL-32B-Instruct dan \textit{roleplay}, yang menyebutkan bahwa pada kasus gambar tertentu, terdapat penilaian estetika yang tidak masuk dalam ranah psikologi. Selain itu, interpretasi tidak selalu berfokus kepada wajah saja, serta terdapat asumsi yang tidak sesuai berdasarkan wajah dan nilai kepribadian \textit{Big Five} dalam narasinya.
+
+Psikolog penilai juga menyampaikan kesan umum bahwa gaya \textit{standard} secara keseluruhan lebih berfokus pada fitur wajah dan lebih sesuai dengan gambar dibanding gaya \textit{roleplay}. Kesan ini didukung oleh rata-rata gabungan pada kriteria akurasi penilaian psikologis dan penilaian keseluruhan yang memiliki skor lebih tinggi pada \textit{standard} dibandingkan dengan \textit{roleplay}. Tetapi pada kriteria koherensi gambar, rata-rata gabungan tidak memiliki peningkatan. Sedangkan pada persona psikolog, gaya \textit{roleplay} sedikit lebih unggul dibandingkan gaya \textit{standard}. Keunggulan gaya \textit{standard} secara umum disebabkan oleh memburuknya kinerja Qwen3-VL-32B-Instruct ketika menggunakan gaya \textit{roleplay}, sementara Gemma-4-31B-IT justru menunjukkan pola sebaliknya. Gaya \textit{roleplay} mendorong model untuk lebih fokus ke wajah subjek, tetapi untuk konsistensinya bergantung pada model yang digunakan. Pada penelitian ini, hanya Gemma-4-31B-IT yang menunjukkan pola ini secara stabil.
+
+Hasil penilaian psikolog ini juga ditinjau dari segi konsistensi terhadap hasil evaluasi otomatis G-Eval pada \autoref{tab:geval_evaluation_full} untuk keempat kombinasi LLM dan gaya respons yang sama. Karena G-Eval dan penilaian psikolog menggunakan skala serta filosofi penilaian yang berbeda, perbandingan tidak dilakukan terhadap nilai keduanya secara langsung, melainkan terhadap dampak hasil yang ditunjukkan oleh masing-masing metode, yaitu apakah kedua metode evaluasi menunjukkan konsistensi gaya atau model yang sama sebagai yang terbaik pada tiap kriteria penilaian. Pada kriteria akurasi penilaian psikologis dan persona psikolog, kedua metode evaluasi menunjukkan arah yang konsisten. Pada akurasi penilaian psikologis, baik G-Eval maupun psikolog sama-sama menunjukkan keunggulan gaya \textit{standard} pada kedua model. Selanjutnya, pada kriteria persona psikolog, kedua metode menunjukkan bahwa pada model Gemma-4-31B-IT, gaya \textit{roleplay} lebih unggul, sementara pada Qwen3-VL-32B-Instruct, gaya \textit{standard} lebih unggul. Namun, pada aspek koherensi gambar, ditemukan arah yang berlawanan pada kedua model. G-Eval menilai pada Gemma-4-31B-IT menggunakan gaya \textit{standard} lebih unggul, sedangkan psikolog menilai gaya \textit{roleplay} yang lebih unggul. Sebaliknya pada Qwen3-VL-32B-Instruct, G-Eval menilai gaya \textit{roleplay} sedikit lebih unggul, sementara psikolog menilai gaya \textit{standard} yang jauh lebih unggul. Ketidaksesuaian pada aspek ini menguatkan argumen yang telah dibahas sebelumnya, yaitu G-Eval cenderung mengasosiasikan kualitas jawaban dengan seberapa terstrukturnya format teks, bukan terhadap tingkat keterhubungan narasi dengan fitur visual pada gambar. Sedangkan psikolog menilai koherensi berdasarkan kesesuaian klinis antara narasi dan fitur wajah yang tampak sehingga tidak dipengaruhi oleh preferensi format tersebut.
+
+Terlepas dari konsistensi arah pada sebagian aspek tersebut, terdapat perbedaan pada tingkat skor yang diberikan psikolog secara keseluruhan dengan skor pada evaluasi G-Eval. Sebagaimana yang telah dipaparkan sebelumnya, seluruh skor psikolog pada keempat aspek berada pada kisaran 44\% hingga 68\% dari skor maksimal, dengan rata-rata keseluruhan hanya 52–61\%. Hal ini menunjukkan penilaian dari psikolog masih jauh dari kategori sangat baik, meskipun G-Eval secara konsisten menilai keempat kombinasi yang sama dengan skor yang sangat tinggi, yaitu di atas 79\% pada seluruh aspek dan kombinasi. Terlepas dari tinggi rendahnya skor yang diberikan G-Eval, penilaian psikolog tetap menunjukkan bahwa kualitas interpretasi yang dihasilkan LLM masih rendah. Hal ini menunjukkan bahwa LLM, baik Gemma-4-31B-IT maupun Qwen3-VL-32B-Instruct belum mampu menghasilkan interpretasi kepribadian yang setara dengan standar penilaian psikolog profesional, meskipun G-Eval memberikan skor tinggi terhadap narasi yang dihasilkan dari segi struktur maupun kelengkapan jawaban. Temuan ini menegaskan bahwa evaluasi otomatis G-Eval belum dapat menggantikan peran evaluasi oleh pakar manusia, khususnya dalam menilai kedalaman dan validitas klinis dari interpretasi yang dihasilkan.
+
+Terdapat dua keterbatasan utama dari hasil evaluasi ini. Pertama, dari segi jumlah data. Penilaian dari ahli hanya berdasarkan 20 penilaian dari satu psikolog, tanpa penilai kedua sebagai pembanding. Selain itu, hanya terdapat lima gambar uji yang dievaluasi untuk tiap kombinasi LLM dan gaya respons. Oleh karena itu, hasil peninjauan konsistensi dengan G-Eval di atas perlu diuji dengan penilai dan volume data uji yang lebih banyak. Kedua, dari segi kriteria evaluasi. Psikolog penilai menyampaikan bahwa keempat aspek penilaian ini disusun berdasarkan kebutuhan praktis penelitian yang belum berdasarkan tori psikometri yang sudah teruji, sehingga validitas dari instrumen ini belum bisa digunakan sepenuhnya untuk mengukur hasil interpretasi kepribadian secara klinis dan sesuai dengan ilmu psikologi. Psikolog menyarankan agar penelitian selanjutnya menggunakan kriteria dan alat penilaian yang lebih baku, dengan mengacu pada ilmu psikometri, sehingga hasil evaluasi menjadi lebih terukur dan mempunyai dasar ilmiah yang kuat.
+
 

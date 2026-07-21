@@ -324,6 +324,9 @@
 }
 \lstset{style=codestyle}
 
+% Menyisipkan halaman pdf untuk halaman yang ada tanda tangan
+\usepackage{pdfpages}
+
 % Isi keseluruhan dokumen
 \begin{document}
 	\setmainfont{Times New Roman}
@@ -376,23 +379,33 @@
 
 	% Lembar pengesahan
 	\phantomsection
-	\input{lainnya/lembar-pengesahan.tex}
+	%\input{lainnya/lembar-pengesahan.tex}
+	\addcontentsline{toc}{chapter}{LEMBAR PENGESAHAN}
+	\includepdf[pages={1}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
 	\cleardoublepage
 	\phantomsection
-	\input{lainnya/lembar-pengesahan-en.tex}
+	%\input{lainnya/lembar-pengesahan-en.tex}
+	\addcontentsline{toc}{chapter}{APPROVAL SHEET}
+	\includepdf[pages={2}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
 	\cleardoublepage
 
 	% Pernyataan keaslian
 	\phantomsection
-	\input{lainnya/pernyataan-keaslian.tex}
+	\addcontentsline{toc}{chapter}{PERNYATAAN ORISINALITAS}
+	\includepdf[pages={3}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	%\input{lainnya/pernyataan-keaslian.tex}
 	\cleardoublepage
 	\phantomsection
-	\input{lainnya/pernyataan-keaslian-en.tex}
+	\addcontentsline{toc}{chapter}{STATEMENT OF ORIGINALITY}
+	\includepdf[pages={4}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	%\input{lainnya/pernyataan-keaslian-en.tex}
 	\cleardoublepage
 
 	% Pernyataan penggunaan AI generatif
 	\phantomsection
-	\input{lainnya/pernyataan-ai-generatif.tex}
+	\addcontentsline{toc}{chapter}{PERNYATAAN KODE ETIK PENGGUNAAN AI GENERATIF}
+	\includepdf[pages={5}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	%\input{lainnya/pernyataan-ai-generatif.tex}
 	\cleardoublepage
 
 	% Abstrak Bahasa Indonesia
@@ -477,18 +490,33 @@
 	\cleardoublepage
 	
 	% Lampiran
-%	\phantomsection
-%	\addcontentsline{toc}{chapter}{LAMPIRAN} 
-%	
-%	% Matikan sementara agar konten lampiran tidak masuk daftar isi
-%	\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
-%	\appendix 
-%	% Matikan perekaman gambar dan tabel ke daftar
-%	\captionsetup{list=false}
-%	\input{lainnya/lampiran.tex}
-%	% Nyalakan kembali agar konten masuk daftar isi
-%	\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
-%	\cleardoublepage
+	\phantomsection
+	\addcontentsline{toc}{chapter}{LAMPIRAN} 
+	
+	% Matikan sementara agar konten lampiran tidak masuk daftar isi
+	\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+	\appendix 
+	% Matikan perekaman gambar dan tabel ke daftar
+	\captionsetup{list=false}
+	
+	% PENGATURAN TAMPILAN HALAMAN LAMPIRAN 
+	\chapter*{LAMPIRAN}
+	\vspace{-2ex}
+	
+	% 2. Ubah penomoran section menjadi independen (A, B, C) tanpa angka bab
+	\renewcommand{\thesection}{\Alph{section}}
+	
+	% 3. Ubah format tampilan judul section menjadi "LAMPIRAN A. Judul Lampiran"
+	\titleformat{\section}{\normalsize\bfseries}{LAMPIRAN \thesection.}{1ex}{}
+	
+	\input{lainnya/lampiran.tex}
+	% Nyalakan kembali agar konten masuk daftar isi
+	\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+	
+	% Trik: Memperpanjang margin bawah khusus di halaman Daftar Isi ini sebesar 2 baris
+	%\addtocontents{toc}{\protect\enlargethispage{2\baselineskip}}
+	
+	\cleardoublepage
 
 	% Biografi penulis
 	\input{lainnya/biografi-penulis.tex}
