@@ -25,11 +25,17 @@ jobs:
             # Compile using xelatex with bibliography
             latexmk -xelatex -file-line-error -halt-on-error -interaction=nonstopmode main.tex
 
+            # Compress PDF
+            gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer -dNOPAUSE -dQUIET -dBATCH -sOutputFile=main_compressed.pdf main.pdf
+            
+            # Overwrite original PDF
+            mv main_compressed.pdf main.pdf
+
       - name: Rename document
         run: mkdir dist && mv main.pdf dist/buku-ta.pdf
 
       - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v4.0.0
+        uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: dist
 
