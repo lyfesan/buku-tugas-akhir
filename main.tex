@@ -146,36 +146,8 @@
 \patchcmd{\chapter}{empty}{plain}{}{}
 
 % Command untuk bulan
-\newcommand{\MONTH}{%
-  \ifcase\the\month
-  \or Januari% 1
-  \or Februari% 2
-  \or Maret% 3
-  \or April% 4
-  \or Mei% 5
-  \or Juni% 6
-  \or Juli% 7
-  \or Agustus% 8
-  \or September% 9
-  \or Oktober% 10
-  \or November% 11
-  \or Desember% 12
-  \fi}
-\newcommand{\ENGMONTH}{%
-  \ifcase\the\month
-  \or January% 1
-  \or February% 2
-  \or March% 3
-  \or April% 4
-  \or May% 5
-  \or June% 6
-  \or July% 7
-  \or August% 8
-  \or September% 9
-  \or October% 10
-  \or November% 11
-  \or December% 12
-  \fi}
+\newcommand{\MONTH}{Juli}
+\newcommand{\ENGMONTH}{July}
   
 \usepackage{makecell}
 
@@ -379,33 +351,33 @@
 
 	% Lembar pengesahan
 	\phantomsection
-	%\input{lainnya/lembar-pengesahan.tex}
-	\addcontentsline{toc}{chapter}{LEMBAR PENGESAHAN}
-	\includepdf[pages={1}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	\input{lainnya/lembar-pengesahan.tex}
+	%\addcontentsline{toc}{chapter}{LEMBAR PENGESAHAN}
+	%\includepdf[pages={1}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
 	\cleardoublepage
 	\phantomsection
-	%\input{lainnya/lembar-pengesahan-en.tex}
+	\input{lainnya/lembar-pengesahan-en.tex}
 	\addcontentsline{toc}{chapter}{APPROVAL SHEET}
 	\includepdf[pages={2}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
 	\cleardoublepage
 
 	% Pernyataan keaslian
 	\phantomsection
-	\addcontentsline{toc}{chapter}{PERNYATAAN ORISINALITAS}
-	\includepdf[pages={3}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
-	%\input{lainnya/pernyataan-keaslian.tex}
+	%\addcontentsline{toc}{chapter}{PERNYATAAN ORISINALITAS}
+	%\includepdf[pages={3}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	\input{lainnya/pernyataan-keaslian.tex}
 	\cleardoublepage
 	\phantomsection
-	\addcontentsline{toc}{chapter}{STATEMENT OF ORIGINALITY}
-	\includepdf[pages={4}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
-	%\input{lainnya/pernyataan-keaslian-en.tex}
+	%\addcontentsline{toc}{chapter}{STATEMENT OF ORIGINALITY}
+	%\includepdf[pages={4}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	\input{lainnya/pernyataan-keaslian-en.tex}
 	\cleardoublepage
 
 	% Pernyataan penggunaan AI generatif
 	\phantomsection
-	\addcontentsline{toc}{chapter}{PERNYATAAN KODE ETIK PENGGUNAAN AI GENERATIF}
-	\includepdf[pages={5}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
-	%\input{lainnya/pernyataan-ai-generatif.tex}
+	%\addcontentsline{toc}{chapter}{PERNYATAAN KODE ETIK PENGGUNAAN AI GENERATIF}
+	%\includepdf[pages={5}]{lainnya/Lembar-TTD-Scan-Alief.pdf}
+	\input{lainnya/pernyataan-ai-generatif.tex}
 	\cleardoublepage
 
 	% Abstrak Bahasa Indonesia
