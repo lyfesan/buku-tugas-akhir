@@ -1,7 +1,6 @@
-# Template LaTeX Buku Tugas Akhir ITS
+# Buku Tugas Akhir ITS
 
-[![latest version](https://img.shields.io/github/v/release/lyfesan/buku-tugas-akhir)](https://github.com/lyfesan/buku-tugas-akhir/releases/)
-[![commits since latest version](https://img.shields.io/github/commits-since/lyfesan/buku-tugas-akhir/latest)](https://github.com/lyfesan/buku-tugas-akhir/commits/main)
+![GitHub last commit](https://img.shields.io/github/last-commit/lyfesan/buku-tugas-akhir)
 [![repo size](https://img.shields.io/github/repo-size/lyfesan/buku-tugas-akhir)](https://github.com/lyfesan/buku-tugas-akhir)
 [![license](https://img.shields.io/github/license/lyfesan/buku-tugas-akhir)](./LICENSE)
 [![build status](https://img.shields.io/github/actions/workflow/status/lyfesan/buku-tugas-akhir/ci.yaml?branch=main)](https://github.com/lyfesan/buku-tugas-akhir/actions/workflows/ci.yaml)
