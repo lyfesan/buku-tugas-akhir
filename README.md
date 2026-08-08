@@ -1,14 +1,13 @@
 # Template LaTeX Buku Tugas Akhir ITS
 
-[![latest version](https://img.shields.io/github/v/release/lyfesan/template-buku-ta-its)](https://github.com/lyfesan/template-buku-ta-its/releases/)
-[![commits since latest version](https://img.shields.io/github/commits-since/lyfesan/template-buku-ta-its/latest)](https://github.com/lyfesan/template-buku-ta-its/commits/main)
-[![repo size](https://img.shields.io/github/repo-size/lyfesan/template-buku-ta-its)](https://github.com/lyfesan/template-buku-ta-its)
-[![license](https://img.shields.io/github/license/lyfesan/template-buku-ta-its)](./LICENSE)
-[![build status](https://img.shields.io/github/actions/workflow/status/lyfesan/template-buku-ta-its/ci.yaml?branch=main)](https://github.com/lyfesan/template-buku-ta-its/actions/workflows/ci.yaml)
+[![latest version](https://img.shields.io/github/v/release/lyfesan/buku-tugas-akhir)](https://github.com/lyfesan/buku-tugas-akhir/releases/)
+[![commits since latest version](https://img.shields.io/github/commits-since/lyfesan/buku-tugas-akhir/latest)](https://github.com/lyfesan/buku-tugas-akhir/commits/main)
+[![repo size](https://img.shields.io/github/repo-size/lyfesan/buku-tugas-akhir)](https://github.com/lyfesan/buku-tugas-akhir)
+[![license](https://img.shields.io/github/license/lyfesan/buku-tugas-akhir)](./LICENSE)
+[![build status](https://img.shields.io/github/actions/workflow/status/lyfesan/buku-tugas-akhir/ci.yaml?branch=main)](https://github.com/lyfesan/buku-tugas-akhir/actions/workflows/ci.yaml)
 
-Repositori ini berisi template [LaTeX](https://www.latex-project.org/) dari buku tugas akhir yang disesuaikan dengan format yang diberlakukan oleh [Institut Teknologi Sepuluh Nopember](https://www.its.ac.id/) (ITS). Meskipun disusun berdasarkan [SK Rektor ITS No. 280 Tahun 2022](https://www.its.ac.id/pendidikan/wp-content/uploads/sites/112/2022/03/280-SK-Rektor-ttg-Pedoman-Penyusunan-Laporan-Tugas-Akhir-Sarjana-Sarjana-Terapan.pdf), template ini secara spesifik disesuaikan untuk kebutuhan **Departemen Teknik Informatika**. Penggunaan untuk departemen lain mungkin memerlukan penyesuaian lebih lanjut.
+Repositori ini berisi dokumen [LaTeX](https://www.latex-project.org/) dari buku tugas akhir yang disesuaikan dengan format yang diberlakukan oleh [Institut Teknologi Sepuluh Nopember](https://www.its.ac.id/) (ITS). Meskipun disusun berdasarkan [SK Rektor ITS No. 280 Tahun 2022](https://www.its.ac.id/pendidikan/wp-content/uploads/sites/112/2022/03/280-SK-Rektor-ttg-Pedoman-Penyusunan-Laporan-Tugas-Akhir-Sarjana-Sarjana-Terapan.pdf), buku tugas akhir ini secara spesifik disesuaikan untuk kebutuhan **Departemen Teknik Informatika**. Penggunaan untuk departemen lain mungkin memerlukan penyesuaian lebih lanjut.
 
-> Contoh file PDF dari template ini bisa dilihat di [sini](https://lyfesan.github.io/template-buku-ta-its/template-buku-ta-its.pdf).
 
 ## Fitur
 
