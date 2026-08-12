@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.3
 
       - name: Compile Document with TeX Live
         uses: xu-cheng/texlive-action@v3
         with:
-          texlive_version: 2025 # Ubah versi TeX Live sesuai kebutuhan
+          texlive_version: 2026
           scheme: full
           run: |
             # Install Microsoft TrueType core fonts package
@@ -31,8 +31,24 @@ jobs:
             # Overwrite original PDF
             mv main_compressed.pdf main.pdf
 
-      - name: Rename document
-        run: mkdir dist && mv main.pdf dist/buku-ta.pdf
+      - name: Prepare Output and Create Redirect
+        run: |
+          mkdir dist && mv main.pdf dist/buku-ta.pdf
+
+          # Generate the HTML redirect file
+          cat << 'EOF' > dist/index.html
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8">
+              <meta http-equiv="refresh" content="0; url=/buku-ta.pdf">
+              <title>Redirecting...</title>
+            </head>
+            <body>
+              <script>window.location.href="/buku-ta.pdf";</script>
+            </body>
+          </html>
+          EOF
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v5.0.0
@@ -55,8 +71,8 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Configure Pages
-        uses: actions/configure-pages@v5.0.0
+        uses: actions/configure-pages@v6.0.0
         
       - name: Deploy Pages
         id: deployment
-        uses: actions/deploy-pages@v4.0.5
+        uses: actions/deploy-pages@v5.0.0
