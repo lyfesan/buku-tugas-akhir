@@ -2,7 +2,8 @@
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/lyfesan/buku-tugas-akhir)
 [![repo size](https://img.shields.io/github/repo-size/lyfesan/buku-tugas-akhir)](https://github.com/lyfesan/buku-tugas-akhir)
-[![license](https://img.shields.io/github/license/lyfesan/buku-tugas-akhir)](./LICENSE)
+[![Code License: LPPL-1.3c](https://img.shields.io/badge/Code-LPPL--1.3c-blue)](./LICENSE-LPPL)
+[![Content License: CC BY-SA 4.0](https://img.shields.io/badge/Content-CC_BY--SA_4.0-lightgrey)](./LICENSE-CC-BY-SA)
 [![build status](https://img.shields.io/github/actions/workflow/status/lyfesan/buku-tugas-akhir/ci.yaml?branch=main)](https://github.com/lyfesan/buku-tugas-akhir/actions/workflows/ci.yaml)
 
 Repositori ini berisi dokumen [LaTeX](https://www.latex-project.org/) dari buku tugas akhir yang disesuaikan dengan format yang diberlakukan oleh [Institut Teknologi Sepuluh Nopember](https://www.its.ac.id/) (ITS). Meskipun disusun berdasarkan [SK Rektor ITS No. 280 Tahun 2022](https://www.its.ac.id/pendidikan/wp-content/uploads/sites/112/2022/03/280-SK-Rektor-ttg-Pedoman-Penyusunan-Laporan-Tugas-Akhir-Sarjana-Sarjana-Terapan.pdf), buku tugas akhir ini secara spesifik disesuaikan untuk kebutuhan **Departemen Teknik Informatika**. Penggunaan untuk departemen lain mungkin memerlukan penyesuaian lebih lanjut.
@@ -211,4 +212,7 @@ def hello_world():
 
 ## Lisensi
 
-Kode sumber yang ada pada repositori ini dilisensikan di bawah [lisensi MIT](./LICENSE).
+Repositori ini menggunakan **Dual Licensing**:
+
+*   **Kode & Format Template LaTeX** (`main.tex`, struktur bab, styling, macro, dan konfigurasi): Dilisensikan di bawah [LaTeX Project Public License v1.3c (LPPL-1.3c)](./LICENSE-LPPL).
+*   **Teks & Konten Tugas Akhir** (isi abstrak, narasi bab, gambar karya asli, dan hasil penelitian): Dilisensikan di bawah [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](./LICENSE-CC-BY-SA).
